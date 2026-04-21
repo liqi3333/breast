@@ -1,5 +1,6 @@
 node_modules/
 dist/
+dist-html/
 *.log
 .DS_Store
 *.tmp
