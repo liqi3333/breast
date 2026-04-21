@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon.png" alt="Breast TNM Tool icon" width="128" height="128" />
   <h1>Breast TNM Tool</h1>
-  <p><strong>Desktop app and standalone HTML tool for breast cancer TNM staging, molecular subtype stratification, and treatment planning.</strong></p>
+  <p><strong>Desktop app plus standalone PC and mobile web versions for breast cancer TNM staging, molecular subtype stratification, and treatment planning.</strong></p>
   <p>
     <a href="README.zh-CN.md">简体中文</a> | <strong>English</strong>
   </p>
@@ -15,6 +15,7 @@
 
   <p>
     <a href="https://liqi3333.github.io/breast/"><img alt="Open Online HTML" src="https://img.shields.io/badge/Open-Online%20HTML-0ea5e9?style=for-the-badge" /></a>
+    <a href="https://liqi3333.github.io/breast/mobile.html"><img alt="Open Mobile Web" src="https://img.shields.io/badge/Open-Mobile%20Web-f59e0b?style=for-the-badge" /></a>
     <a href="https://github.com/liqi3333/breast/releases/latest"><img alt="Download Latest EXE" src="https://img.shields.io/badge/Download-Latest%20EXE-e91e63?style=for-the-badge" /></a>
     <a href="https://github.com/liqi3333/breast/releases/latest"><img alt="Download Latest HTML" src="https://img.shields.io/badge/Download-Latest%20HTML-10b981?style=for-the-badge" /></a>
   </p>
@@ -29,22 +30,29 @@ Breast TNM Tool is an Electron desktop application built from a single-file HTML
 
 The app helps users review breast cancer TNM stage, molecular subtype, simplified prognostic staging, and individualized treatment follow-up suggestions in one screen.
 
+Separate web entry points are now available:
+
+- PC web version: <https://liqi3333.github.io/breast/>
+- Mobile web version: <https://liqi3333.github.io/breast/mobile.html>
+
 ## Highlights
 
 - Integrated TNM staging and molecular subtype selection
 - Simplified anatomic stage and prognostic stage display
 - Treatment planning and follow-up recommendation panel
 - Windows portable EXE build output
-- Standalone HTML file for direct browser use
+- Standalone PC HTML file for direct browser use
+- Separate mobile-optimized HTML version for phones
 - Automated GitHub Actions build and release pipeline
 
 ## Online HTML Version
 
-You can use the standalone browser version here:
+You can use the web versions here:
 
-- Online page: <https://liqi3333.github.io/breast/>
+- PC web page: <https://liqi3333.github.io/breast/>
+- Mobile web page: <https://liqi3333.github.io/breast/mobile.html>
 
-You can also download the original standalone HTML file from Releases.
+You can also download both standalone HTML files from Releases.
 
 ## Screenshots
 
@@ -60,10 +68,16 @@ You can also download the original standalone HTML file from Releases.
 
 ### Download
 
-Open the latest release page and download either the Windows executable or the standalone HTML file:
+Open the latest release page and download any of these assets:
 
 - Latest release: <https://github.com/liqi3333/breast/releases/latest>
 - All releases: <https://github.com/liqi3333/breast/releases>
+
+Included assets:
+
+- Windows EXE
+- PC standalone HTML
+- Mobile standalone HTML
 
 ### Run locally
 
@@ -88,22 +102,23 @@ npm run build:html
 Build outputs:
 
 ```text
-dist/Breast-TNM-Tool-1.0.3.exe
-dist-html/Breast-TNM-Tool-1.0.3.html
+dist/Breast-TNM-Tool-1.0.4.exe
+dist-html/Breast-TNM-Tool-1.0.4.html
+dist-html/Breast-TNM-Tool-mobile-1.0.4.html
 ```
 
 ## Release Automation
 
 This repository includes GitHub Actions workflows for build and release automation.
 
-- Push to `main`: runs Windows build validation and uploads EXE + HTML workflow artifacts
-- Push a tag like `v1.0.3`: automatically builds the Windows x64 portable EXE, generates a standalone HTML file, creates a GitHub Release, and uploads both assets
+- Push to `main`: runs Windows build validation and uploads EXE + desktop HTML + mobile HTML workflow artifacts
+- Push a tag like `v1.0.4`: automatically builds the Windows x64 portable EXE, generates standalone desktop/mobile HTML files, creates a GitHub Release, and uploads all assets
 
 Example:
 
 ```bash
-git tag v1.0.3
-git push origin v1.0.3
+git tag v1.0.4
+git push origin v1.0.4
 ```
 
 ## Release Notes Template
@@ -130,6 +145,7 @@ The release workflow uses this file as the main body of the release notes, then 
 │   ├── build-html-release.js
 │   └── capture-screenshots.js
 ├── index.html
+├── mobile.html
 ├── main.js
 ├── package.json
 ├── README.md

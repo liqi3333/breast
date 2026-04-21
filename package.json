@@ -1,7 +1,7 @@
 {
   "name": "breast-tnm-tool",
-  "version": "1.0.3",
-  "description": "Desktop app for breast cancer TNM staging and molecular subtype stratification | 乳腺癌 TNM 分期与分子分型桌面工具",
+  "version": "1.0.4",
+  "description": "Desktop and mobile web app for breast cancer TNM staging and molecular subtype stratification | 乳腺癌 TNM 分期桌面与移动网页工具",
   "main": "main.js",
   "author": {
     "name": "shbsrh"
@@ -33,7 +33,8 @@
     },
     "files": [
       "main.js",
-      "index.html"
+      "index.html",
+      "mobile.html"
     ],
     "win": {
       "icon": "assets/icon.ico",
