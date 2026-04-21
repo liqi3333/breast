@@ -7,7 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win portable"
+    "build:win": "electron-builder --win portable",
+    "capture:screenshots": "electron scripts/capture-screenshots.js"
   },
   "devDependencies": {
     "electron": "^35.1.5",
@@ -18,13 +19,15 @@
     "productName": "Breast TNM Tool",
     "artifactName": "Breast-TNM-Tool-${version}.${ext}",
     "directories": {
-      "output": "dist"
+      "output": "dist",
+      "buildResources": "assets"
     },
     "files": [
       "main.js",
       "index.html"
     ],
     "win": {
+      "icon": "assets/icon.ico",
       "target": [
         {
           "target": "portable",
