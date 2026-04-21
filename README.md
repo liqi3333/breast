@@ -42,7 +42,7 @@ npm run build:win
 构建完成后，产物默认位于：
 
 ```text
-dist/Breast-TNM-Tool-1.0.0.exe
+dist/Breast-TNM-Tool-1.0.1.exe
 ```
 
 ## 自动 Release 流程
@@ -58,8 +58,8 @@ dist/Breast-TNM-Tool-1.0.0.exe
 示例：
 
 ```bash
-git tag v1.0.0
-git push origin v1.0.0
+git tag v1.0.1
+git push origin v1.0.1
 ```
 
 ## 发布说明
@@ -70,7 +70,7 @@ git push origin v1.0.0
 docs/RELEASE_TEMPLATE.md
 ```
 
-你可以按需修改模板内容，Release 工作流会自动把它作为发布说明正文的一部分，同时附加 GitHub 自动生成的更新说明。
+你可以按需修改模板内容，Release 工作流会自动把它作为中文发布说明正文的一部分，同时附加 GitHub 自动生成的更新说明。
 
 ## 项目结构
 

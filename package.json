@@ -1,9 +1,16 @@
 {
   "name": "breast-tnm-tool",
-  "version": "1.0.0",
-  "description": "乳腺癌 TNM + 分子分型桌面工具",
+  "version": "1.0.1",
+  "description": "Desktop breast cancer TNM and molecular subtype staging tool",
   "main": "main.js",
-  "author": "OpenClaw",
+  "author": {
+    "name": "shbsrh"
+  },
+  "homepage": "https://github.com/liqi3333/breast",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liqi3333/breast.git"
+  },
   "license": "UNLICENSED",
   "scripts": {
     "start": "electron .",
@@ -17,6 +24,7 @@
   "build": {
     "appId": "ai.openclaw.breast-tnm-tool",
     "productName": "Breast TNM Tool",
+    "copyright": "Copyright © 2026 shbsrh",
     "artifactName": "Breast-TNM-Tool-${version}.${ext}",
     "directories": {
       "output": "dist",
@@ -28,6 +36,7 @@
     ],
     "win": {
       "icon": "assets/icon.ico",
+      "legalTrademarks": "shbsrh",
       "target": [
         {
           "target": "portable",
