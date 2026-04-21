@@ -1,78 +1,99 @@
 <div align="center">
   <img src="assets/icon.png" alt="Breast TNM Tool icon" width="128" height="128" />
   <h1>Breast TNM Tool</h1>
+  <p><strong>Desktop app for breast cancer TNM staging, molecular subtype stratification, and treatment planning.</strong></p>
   <p>乳腺癌 TNM + 分子分型桌面工具</p>
+
+  <p>
+    <a href="https://github.com/liqi3333/breast/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/v/release/liqi3333/breast?display_name=tag&label=release" /></a>
+    <a href="https://github.com/liqi3333/breast/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/liqi3333/breast/total?label=downloads" /></a>
+    <a href="https://github.com/liqi3333/breast/actions/workflows/build-windows.yml"><img alt="Build Windows EXE" src="https://github.com/liqi3333/breast/actions/workflows/build-windows.yml/badge.svg" /></a>
+    <a href="https://github.com/liqi3333/breast/actions/workflows/release.yml"><img alt="Release Windows EXE" src="https://github.com/liqi3333/breast/actions/workflows/release.yml/badge.svg" /></a>
+  </p>
+
+  <p>
+    <a href="https://github.com/liqi3333/breast/releases/latest"><img alt="Download Latest EXE" src="https://img.shields.io/badge/Download-Latest%20EXE-e91e63?style=for-the-badge" /></a>
+    <a href="https://github.com/liqi3333/breast/releases"><img alt="View Releases" src="https://img.shields.io/badge/View-Releases-6f42c1?style=for-the-badge" /></a>
+    <a href="https://github.com/liqi3333/breast"><img alt="Source Code" src="https://img.shields.io/badge/View-Source-24292f?style=for-the-badge" /></a>
+  </p>
 </div>
 
-这是一个基于 Electron 的桌面应用，用单文件 HTML 页面封装为 Windows 可执行程序，提供乳腺癌 TNM 分期、分子分型、简化预后分期，以及个体化治疗计划与随访建议的可视化界面。
+## Overview
 
-## 功能
+Breast TNM Tool is an Electron desktop application that packages a single-file HTML clinical interface into a Windows executable. It helps users review breast cancer TNM stage, molecular subtype, simplified prognostic staging, and individualized treatment follow-up suggestions in one screen.
 
-- 乳腺癌 TNM 分期选择
-- 分子分型与组织学分级整合
-- 解剖学分期与简化预后分期展示
-- 个体化治疗计划与随访建议面板
-- 一键构建 Windows 便携版 EXE
-- GitHub Actions 自动构建与 Release 发布
+## Highlights
 
-## 项目截图
+- Integrated TNM staging and molecular subtype selection
+- Simplified anatomic stage and prognostic stage display
+- Treatment planning and follow-up recommendation panel
+- Windows portable EXE build output
+- Automated GitHub Actions build and release pipeline
 
-### 主界面
+## Screenshots
+
+### Main interface
 
 ![Breast TNM Tool overview](assets/screenshots/overview.png)
 
-### 治疗计划面板
+### Treatment plan panel
 
 ![Breast TNM Tool treatment plan](assets/screenshots/treatment-plan.png)
 
-## 本地开发
+## Quick Start
+
+### Download
+
+Open the latest release page and download the packaged Windows executable:
+
+- Latest release: <https://github.com/liqi3333/breast/releases/latest>
+- Direct release list: <https://github.com/liqi3333/breast/releases>
+
+### Run locally
 
 ```bash
 npm install
 npm start
 ```
 
-## 构建 Windows 便携版 EXE
+### Build Windows portable EXE
 
 ```bash
 npm install
 npm run build:win
 ```
 
-构建完成后，产物默认位于：
+Build output:
 
 ```text
 dist/Breast-TNM-Tool-1.0.1.exe
 ```
 
-## 自动 Release 流程
+## Release Automation
 
-仓库内已包含 GitHub Actions Release 工作流。
+This repository includes GitHub Actions workflows for build and release automation.
 
-- 推送到 `main` 时，会自动执行 Windows 构建检查并上传 artifact
-- 推送形如 `v1.0.0` 的 tag 时，会自动：
-  - 构建 Windows x64 便携版 EXE
-  - 创建 GitHub Release
-  - 把 `dist/*.exe` 作为 Release 附件上传
+- Push to `main`: runs Windows build validation and uploads workflow artifacts
+- Push a tag like `v1.0.1`: automatically builds the Windows x64 portable EXE, creates a GitHub Release, and uploads `dist/*.exe`
 
-示例：
+Example:
 
 ```bash
 git tag v1.0.1
 git push origin v1.0.1
 ```
 
-## 发布说明
+## Release Notes Template
 
-发布说明模板位于：
+Chinese release notes template:
 
 ```text
 docs/RELEASE_TEMPLATE.md
 ```
 
-你可以按需修改模板内容，Release 工作流会自动把它作为中文发布说明正文的一部分，同时附加 GitHub 自动生成的更新说明。
+The release workflow uses this file as the main body of the release notes, then appends GitHub-generated notes automatically.
 
-## 项目结构
+## Project Structure
 
 ```text
 .
@@ -92,8 +113,8 @@ docs/RELEASE_TEMPLATE.md
     └── release.yml
 ```
 
-## 说明
+## Notes
 
-- 当前仓库默认不提交 `node_modules/` 与 `dist/`
-- Windows 第一次运行未签名 EXE 时，可能会看到 SmartScreen 提示
-- 医学分期与治疗建议仅供医学信息参考，不替代临床诊断与正式治疗决策
+- `node_modules/` and `dist/` are not committed
+- On first launch, Windows SmartScreen may show a warning because the EXE is not code signed
+- Medical content is for informational use only and does not replace formal diagnosis or clinical decision-making
