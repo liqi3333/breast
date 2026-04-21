@@ -1,0 +1,38 @@
+{
+  "name": "breast-tnm-tool",
+  "version": "1.0.0",
+  "description": "乳腺癌 TNM + 分子分型桌面工具",
+  "main": "main.js",
+  "author": "OpenClaw",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^35.1.5",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "ai.openclaw.breast-tnm-tool",
+    "productName": "Breast TNM Tool",
+    "artifactName": "Breast-TNM-Tool-${version}.${ext}",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    }
+  }
+}
