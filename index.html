@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    <title>乳腺癌AJCC8分期·预后分期·治疗随访决策支持 v1.2.0</title>
+    <title>乳腺癌AJCC8分期·预后分期·治疗随访决策支持 v1.4.0</title>
     <style>
         * { box-sizing: border-box; margin: 0; }
         body {
@@ -72,6 +72,38 @@
         .footnote { font-size: 0.77rem; text-align: right; color: #7a5f6b; margin-top: 12px; line-height: 1.5; }
         .muted { color: #756575; font-size: 0.86rem; }
         .two-column { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+
+        .top-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; margin: 8px 0 16px; }
+        .action-btn, .toggle-btn { background:#fff; border:1px solid #b3446c; color:#7b3150; padding:7px 13px; border-radius:20px; font-size:.84rem; font-weight:700; cursor:pointer; text-decoration:none; }
+        .action-btn:hover, .toggle-btn:hover { background:#b3446c; color:#fff; }
+        .section-body { transition: max-height .25s ease, opacity .2s ease; overflow:hidden; }
+        .section-block.collapsed .section-body { max-height:0 !important; opacity:.0; padding-top:0; }
+        .section-block.collapsed { padding-bottom: 10px; }
+        .decision-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:10px; margin: 12px 0; }
+        .decision-card { border:1px solid #e5cad6; background:#fff; border-radius:16px; padding:12px; }
+        .decision-card strong { display:block; margin-bottom:4px; color:#71324f; }
+        .decision-yes { border-left: 6px solid #2c7a4b; }
+        .decision-no { border-left: 6px solid #777; }
+        .decision-maybe { border-left: 6px solid #c98225; }
+        .drug-pool { background:#f8f3f6; border:1px dashed #d1a9bb; padding:12px 14px; border-radius:16px; margin:12px 0; font-size:.9rem; line-height:1.5; }
+        .modal-backdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.32); z-index:99; align-items:center; justify-content:center; padding:18px; }
+        .modal-backdrop.show { display:flex; }
+        .modal { max-width:720px; width:100%; max-height:90vh; overflow:auto; background:#fff; border-radius:22px; box-shadow:0 20px 60px rgba(0,0,0,.22); padding:20px; }
+        .modal h2 { margin-top:0; }
+        .settings-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin:12px 0; }
+        .settings-grid label { display:flex; gap:8px; align-items:flex-start; background:#fff7fa; border:1px solid #ecd4df; border-radius:14px; padding:10px; font-size:.9rem; }
+        .help-text { margin-top: 6px; font-size: 0.78rem; line-height: 1.45; color: #6d5966; background: #fff7fb; border: 1px dashed #e4c6d4; border-radius: 12px; padding: 8px 10px; }
+        .help-text b { color:#743455; }
+        body.help-hidden .help-text { display: none !important; }
+        .stage-result.stage-0 { background: linear-gradient(105deg, #effaf4 0%, #e2f3e9 100%); border-color:#bfe2cb; }
+        .stage-result.stage-I { background: linear-gradient(105deg, #fce9f0 0%, #f5dae7 100%); border-color:#e2bfcf; }
+        .stage-result.stage-II { background: linear-gradient(105deg, #fde7d8 0%, #f8cda9 100%); border-color:#efb88f; }
+        .stage-result.stage-III { background: linear-gradient(105deg, #f8c1a5 0%, #ee8e68 100%); border-color:#dc7654; }
+        .stage-result.stage-IV { background: linear-gradient(105deg, #ee9aa6 0%, #c94b5d 100%); border-color:#b73d50; }
+        .stage-result.stage-pCR { background: linear-gradient(105deg, #e9f7ef 0%, #c9ead6 100%); border-color:#9bd1ae; }
+        .stage-result.stage-unknown { background: linear-gradient(105deg, #f3f0f3 0%, #e6dde4 100%); border-color:#cfc2cc; }
+
+        @media print { body { background:#fff; padding:0; } .top-actions, .settings-modal, .collapse-header, .legend button, .no-print { display:none !important; } .card { box-shadow:none; border:none; border-radius:0; max-width:none; } .collapse-content { max-height:none !important; } }
         @media (max-width: 720px) { .stage-value { font-size: 2.7rem; } .collapse-header { align-items: flex-start; gap: 10px; } }
     </style>
 </head>
@@ -79,10 +111,19 @@
 <div class="card">
     <h1>
         <span>🎗️ 乳腺癌·AJCC8分期与治疗随访决策支持</span>
-        <span class="version-pill">v1.2.0 专业方案版</span>
+        <span class="version-pill">v1.4.0 双语解释·专业导出版</span>
     </h1>
     <div class="subhead">
-        输入TNM、分期场景、Luminal/受体状态、ER/PR/HER2、分级、Ki-67、手术/绝经/多基因和分子检测等信息；自动计算AJCC第8版解剖学分期，并按AJCC临床/病理预后分期表给出可适用组合的预后分期。治疗模块新增常用化疗、靶向、内分泌、免疫和辅助强化方案及常见周期提示；所有方案均需MDT和当地指南/获批适应证确认。
+        输入TNM、分期场景、ER/PR/HER2、G、Ki-67、Luminal分型、手术、绝经、多基因与分子检测；自动推断Luminal分型，计算AJCC第8版解剖学分期，并按AJCC临床/病理预后分期表输出可适用组合。治疗模块先给出“是否推荐”的直接结论，再列常用方案、药物池和周期。支持中英双语、模块折叠、打印设置、Word/Excel导出。
+    </div>
+
+    <div class="top-actions no-print">
+        <button class="action-btn" id="langToggleBtn">🌐 English</button>
+        <button class="action-btn" id="helpToggleBtn">🛈 隐藏解释</button>
+        <button class="action-btn" id="settingsBtn">⚙️ 设置/Settings</button>
+        <button class="action-btn" id="printBtn">🖨️ 打印/Print</button>
+        <button class="action-btn" id="exportWordBtn">📄 导出Word</button>
+        <button class="action-btn" id="exportExcelBtn">📊 导出Excel</button>
     </div>
 
     <div class="section-block">
@@ -158,13 +199,13 @@
     <div class="section-block">
         <div class="section-title"><strong>② 病理与生物标志物</strong><span class="muted">AJCC预后分期使用G、HER2、ER、PR；治疗模块再结合Luminal、Ki-67/HER2-low等</span></div>
         <div class="grid-panel">
-            <div class="select-group"><label>Luminal/分子分型</label><select id="luminalSubtype"><option value="auto" selected>自动判断（根据ER/PR/HER2/Ki-67/G）</option><option value="LumA">Luminal A：ER/PR强阳、HER2-、Ki-67低、通常G1-2</option><option value="LumB_HER2neg">Luminal B-like HER2-：ER+、HER2-，PR低/阴或Ki-67高或G3</option><option value="LumB_HER2pos">Luminal B-like HER2+：ER和/或PR+、HER2+</option><option value="HER2pos">HER2过表达型：ER-/PR-/HER2+</option><option value="TNBC">三阴性/TNBC：ER-/PR-/HER2-</option><option value="unknown">未知/不用于判断</option></select></div>
+            <div class="select-group"><label>Luminal/分子分型</label><select id="luminalSubtype"><option value="auto" selected>自动判断：根据ER、PR、HER2、Ki-67、G自动推断并显示</option><option value="LumA">Luminal A-like（管腔A样）：ER阳性、PR较高、HER2阴性、Ki-67低（常&lt;10%，部分中心&lt;14%）、G1-2</option><option value="LumB_HER2neg">Luminal B-like HER2-（管腔B样HER2阴性）：ER阳性、HER2阴性，PR低/阴、Ki-67高（常≥20%）或G3</option><option value="LumB_HER2pos">Luminal B-like HER2+（管腔B样HER2阳性）：ER和/或PR阳性，HER2阳性</option><option value="HER2pos">HER2-enriched/过表达型：ER阴性、PR阴性、HER2阳性</option><option value="TNBC">Triple-negative/TNBC（三阴性）：ER阴性、PR阴性、HER2阴性</option><option value="unknown">未知/无法判定：受体或Ki-67/G信息不足</option></select></div>
             <div class="select-group"><label>组织学分级 G</label><select id="grade"><option value="G1" selected>G1 低级别/高分化：腺管形成多、核异型轻、核分裂少</option><option value="G2">G2 中级别/中分化：介于G1与G3之间</option><option value="G3">G3 高级别/低分化：腺管形成少、核异型明显、核分裂多</option><option value="GX">GX/未知：分级不能评估（预后分期需补充）</option></select></div>
             <div class="select-group"><label>ER状态</label><select id="erStatus"><option value="Positive" selected>阳性：IHC核染色≥1%（1-10%为ER低阳性，需谨慎解释）</option><option value="Negative">阴性：IHC核染色&lt;1%</option><option value="Unknown">未知/未检测</option></select></div>
             <div class="select-group"><label>PR状态</label><select id="prStatus"><option value="Positive" selected>阳性：IHC核染色≥1%</option><option value="Negative">阴性：IHC核染色&lt;1%</option><option value="Unknown">未知/未检测</option></select></div>
             <div class="select-group"><label>HER2状态（AJCC用）</label><select id="her2Status"><option value="Negative" selected>阴性：IHC 0/1+ 或 IHC 2+且ISH未扩增</option><option value="Positive">阳性：IHC 3+ 或 IHC 2+且ISH扩增</option><option value="Equivocal">结果不确定/需复核：AJCC表中暂按阴性处理</option><option value="Unknown">未知/未检测</option></select></div>
             <div class="select-group"><label>HER2-low/ultralow</label><select id="her2Low"><option value="unknown" selected>未知/不适用</option><option value="low">HER2-low：IHC 1+或IHC 2+/ISH-</option><option value="ultralow">HER2-ultralow：IHC 0但有极低膜染色</option><option value="zero">HER2 0：未见可判读膜染色</option></select></div>
-            <div class="select-group"><label>Ki-67</label><select id="ki67"><option value="unknown" selected>未知/未报告</option><option value="low">低：通常&lt;10%（实验室阈值需注明）</option><option value="intermediate">中间：约10-20%（灰区，需结合PR/G/复发评分）</option><option value="high">高：通常≥20%（支持Luminal B-like/高风险判断）</option></select></div>
+            <div class="select-group"><label>Ki-67</label><select id="ki67"><option value="unknown" selected>未知/未报告</option><option value="low">低：&lt;10%（低增殖；部分中心Luminal A阈值可用&lt;14%）</option><option value="intermediate">中间：10-19%（灰区；需结合PR、G、肿瘤大小、N状态、多基因检测）</option><option value="high">高：≥20%（高增殖；支持Luminal B-like/较高风险判断）</option></select></div>
         </div>
     </div>
 
@@ -193,12 +234,13 @@
     </div>
 
     <div class="stage-result" id="stageResult">
-        <span class="stage-badge">🎯 计算结果</span>
+        <span class="stage-badge">🧭 AJCC分期与临床决策摘要</span>
         <div class="stage-value" id="stageDisplay">ⅠA 期</div>
         <div class="stage-desc" id="stageDesc">AJCC解剖学分期待评估</div>
         <div class="pill-row">
             <span class="pill" id="tnmSummary">cT1a cN0 cM0</span>
             <span class="pill" id="biologySummary">ER+ / PR+ / HER2- / G1</span>
+            <span class="pill" id="luminalSummary">Luminal A-like</span>
             <span class="pill good" id="prognosticNote">AJCC预后分期：待评估</span>
         </div>
     </div>
@@ -234,6 +276,27 @@
     <div class="footnote">
         参考：AJCC第8版/NCI PDQ乳腺癌分期表，NCCN Breast Cancer v2.2026，CSCO乳腺癌诊疗指南2025，ASCO/NCCN随访原则，ASCO早期乳腺癌系统治疗相关建议。常用方案与周期仅供专科讨论参考，不含剂量，不替代处方。
     </div>
+
+    <div class="modal-backdrop settings-modal" id="settingsModal">
+        <div class="modal">
+            <h2>⚙️ 打印/导出设置 <span class="muted">Print & Export Settings</span></h2>
+            <p class="muted">选择要包含在打印、Word或Excel导出中的模块。未勾选模块不会出现在导出内容中。</p>
+            <div class="settings-grid">
+                <label><input type="checkbox" class="export-opt" value="summary" checked> 分期与临床决策摘要 / Stage summary</label>
+                <label><input type="checkbox" class="export-opt" value="inputs" checked> 当前输入参数 / Input parameters</label>
+                <label><input type="checkbox" class="export-opt" value="direct" checked> 直接治疗建议 / Direct recommendations</label>
+                <label><input type="checkbox" class="export-opt" value="regimens" checked> 常用方案与药物池 / Regimens and drug pools</label>
+                <label><input type="checkbox" class="export-opt" value="followup" checked> 随访与监测 / Follow-up</label>
+                <label><input type="checkbox" class="export-opt" value="warnings" checked> 适用性与安全提示 / Warnings</label>
+                <label><input type="checkbox" class="export-opt" value="rules" checked> 规则说明与边界 / Rule notes</label>
+            </div>
+            <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
+                <button class="action-btn" id="selectAllExport">全选</button>
+                <button class="action-btn" id="closeSettings">完成</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
@@ -449,6 +512,7 @@ const BreastToolCore = (() => {
     const stageDesc = document.getElementById('stageDesc');
     const tnmSummary = document.getElementById('tnmSummary');
     const biologySummary = document.getElementById('biologySummary');
+    const luminalSummary = document.getElementById('luminalSummary');
     const prognosticNote = document.getElementById('prognosticNote');
     const managementPanel = document.getElementById('managementPanel');
     const collapseHeader = document.getElementById('collapseHeader');
@@ -456,6 +520,35 @@ const BreastToolCore = (() => {
     const collapseIcon = document.getElementById('collapseIcon');
     const copyBtn = document.getElementById('copyPlanBtn');
     let expanded = false;
+
+    let helpVisible = true;
+    const helpInfo = {
+        stageContext:{zh:'说明：用于区分诊断时临床分期、先手术后的病理分期，以及新辅助治疗后的再分期。不同场景能否使用AJCC预后分期表不同。',en:'Explanation: distinguishes clinical staging at diagnosis, pathologic staging after upfront surgery, and restaging after neoadjuvant therapy. Applicability of AJCC prognostic staging differs by scenario.'},
+        neoadjuvantStatus:{zh:'说明：新辅助治疗指手术前先进行化疗、靶向、免疫或内分泌等系统治疗。接受新辅助后，应记录治疗前cTNM和治疗后yc/ypTNM。',en:'Explanation: neoadjuvant therapy is systemic treatment given before surgery. After neoadjuvant therapy, both pretreatment cTNM and post-treatment yc/ypTNM should be recorded.'},
+        tStage:{zh:'说明：T描述原发肿瘤大小和局部侵犯范围。T1≤2cm，T2>2-5cm，T3>5cm，T4表示胸壁/皮肤侵犯或炎性乳腺癌。',en:'Explanation: T describes primary tumor size and local extension. T1 is ≤2 cm, T2 is >2-5 cm, T3 is >5 cm, and T4 indicates chest wall/skin involvement or inflammatory breast cancer.'},
+        nStage:{zh:'说明：N描述区域淋巴结转移范围。N1mi为微转移，通常是病理评估概念；N3表示锁骨下/锁骨上或广泛内乳等高负荷区域淋巴结受累。',en:'Explanation: N describes regional lymph node involvement. N1mi indicates micrometastasis and is mainly a pathologic concept; N3 indicates high-burden regional nodal disease such as infraclavicular/supraclavicular or extensive internal mammary involvement.'},
+        mStage:{zh:'说明：M描述是否有远处转移。M1即IV期；M0(i+)指孤立肿瘤细胞，AJCC分期中通常按M0处理。',en:'Explanation: M indicates distant metastasis. M1 is stage IV; M0(i+) means isolated tumor cells and is generally handled as M0 for AJCC stage grouping.'},
+        responseStatus:{zh:'说明：pCR通常指新辅助治疗后无残余浸润癌（可有原位癌），且淋巴结无浸润转移。pCR影响后续强化治疗选择。',en:'Explanation: pCR usually means no residual invasive cancer after neoadjuvant therapy (in-situ disease may remain) and no invasive nodal disease. pCR influences postoperative escalation/de-escalation decisions.'},
+        luminalSubtype:{zh:'说明：Luminal分型是基于ER/PR/HER2/Ki-67/G等近似推断的临床分子分型，用于治疗方向；正式病理仍以ER、PR、HER2和分级等原始指标为准。',en:'Explanation: Luminal subtype is an approximate clinical molecular subtype inferred from ER/PR/HER2/Ki-67/grade. It guides treatment direction, but the original ER, PR, HER2 and grade remain the primary pathology variables.'},
+        grade:{zh:'说明：G分级反映肿瘤细胞分化程度。G1较接近正常、风险较低；G3分化差、增殖快，通常提示更高复发风险。',en:'Explanation: Grade reflects tumor differentiation. G1 is more well differentiated and generally lower risk; G3 is poorly differentiated and usually indicates higher recurrence risk.'},
+        erStatus:{zh:'说明：ER为雌激素受体。ER阳性通常提示可从内分泌治疗获益；ER低阳性（1-10%）需结合其他因素谨慎判断。',en:'Explanation: ER is estrogen receptor. ER-positive tumors usually benefit from endocrine therapy; ER-low positive disease (1-10%) should be interpreted cautiously with other factors.'},
+        prStatus:{zh:'说明：PR为孕激素受体。PR阳性支持激素受体通路活跃；PR低或阴性可提示Luminal B样或较高风险。',en:'Explanation: PR is progesterone receptor. PR positivity supports active hormone-receptor biology; low/negative PR may suggest Luminal B-like biology or higher risk.'},
+        her2Status:{zh:'说明：HER2状态决定是否使用抗HER2治疗。IHC 3+或IHC 2+且ISH扩增为阳性；不确定结果需要按ASCO/CAP规则复核。',en:'Explanation: HER2 status determines eligibility for anti-HER2 therapy. IHC 3+ or IHC 2+ with ISH amplification is positive; equivocal results require reassessment per ASCO/CAP principles.'},
+        her2Low:{zh:'说明：HER2-low/ultralow不是AJCC分期变量，主要影响晚期经治患者ADC药物选择，如T-DXd等。',en:'Explanation: HER2-low/ultralow is not an AJCC staging variable. It mainly affects ADC selection in previously treated advanced disease, such as T-DXd.'},
+        ki67:{zh:'说明：Ki-67反映细胞增殖活性。低值提示增殖慢，高值提示增殖快；各中心阈值可能不同，因此需结合PR、G和多基因检测。',en:'Explanation: Ki-67 reflects proliferative activity. Low values suggest slower growth, high values faster growth. Cutoffs vary by center, so PR, grade and genomic assays should be considered together.'},
+        surgeryType:{zh:'说明：手术方式影响放疗建议。保乳术后通常需全乳放疗；乳房切除后是否放疗取决于T/N分期、切缘和其他风险因素。',en:'Explanation: Surgery type affects radiation decisions. Breast-conserving surgery is usually followed by whole-breast radiation; post-mastectomy radiation depends on T/N stage, margins and other risk factors.'},
+        axillarySurgery:{zh:'说明：腋窝处理用于评估区域控制和放疗范围。前哨活检、清扫或靶向腋窝处理的选择取决于临床N状态和新辅助反应。',en:'Explanation: Axillary management informs regional control and radiation fields. Sentinel biopsy, dissection or targeted axillary surgery depends on clinical nodal status and response to neoadjuvant therapy.'},
+        marginStatus:{zh:'说明：切缘表示肿瘤距切除边缘的情况。阳性切缘通常需要再切除或调整放疗策略。',en:'Explanation: Margin status describes tumor proximity to the surgical edge. Positive margins usually require re-excision or adjustment of radiation strategy.'},
+        menopause:{zh:'说明：绝经状态影响内分泌治疗选择和化疗获益解释。绝经前常涉及卵巢功能抑制；绝经后常用芳香化酶抑制剂。',en:'Explanation: Menopausal status affects endocrine therapy selection and interpretation of chemotherapy benefit. Premenopausal patients may need ovarian suppression; postmenopausal patients often receive aromatase inhibitors.'},
+        genomicTest:{zh:'说明：多基因检测主要用于HR+/HER2-早期乳腺癌的复发风险和化疗获益评估，不适用于所有分型或所有分期。',en:'Explanation: Multigene assays mainly estimate recurrence risk and chemotherapy benefit in early HR+/HER2-negative breast cancer; they are not applicable to every subtype or stage.'},
+        oncotypeScore:{zh:'说明：Oncotype DX复发评分为0-100。分数越高通常复发风险和化疗获益越高；解释需结合年龄、绝经状态和淋巴结状态。',en:'Explanation: Oncotype DX recurrence score ranges from 0 to 100. Higher scores generally indicate higher recurrence risk and greater chemotherapy benefit; interpretation depends on age, menopause and nodal status.'},
+        brca:{zh:'说明：gBRCA1/2为遗传性胚系变异。阳性可能影响PARP抑制剂适应证、遗传咨询、家系筛查和风险降低手术讨论。',en:'Explanation: gBRCA1/2 indicates germline hereditary variants. Positivity may affect PARP inhibitor eligibility, genetic counseling, family testing and risk-reducing surgery discussions.'},
+        palb2:{zh:'说明：PALB2等遗传高危基因与乳腺癌易感性有关。阳性需要遗传咨询和长期风险管理，但不等同于自动使用PARP药物。',en:'Explanation: PALB2 and other hereditary risk genes are associated with breast cancer susceptibility. Positivity warrants genetic counseling and long-term risk management but does not automatically mean PARP inhibitor therapy.'},
+        pik3ca:{zh:'说明：PIK3CA/AKT1/PTEN通路改变主要用于晚期HR+/HER2-疾病选择PI3K/AKT通路药物，需结合既往CDK4/6和内分泌治疗史。',en:'Explanation: PIK3CA/AKT1/PTEN alterations mainly guide PI3K/AKT pathway therapy in advanced HR+/HER2-negative disease, in context of prior CDK4/6 and endocrine therapy.'},
+        esr1:{zh:'说明：ESR1突变常见于内分泌治疗后耐药的HR+晚期乳腺癌，可影响SERD等内分泌序贯选择。',en:'Explanation: ESR1 mutations are often associated with endocrine resistance in advanced HR-positive disease and may influence SERD or other endocrine sequencing.'},
+        pdl1:{zh:'说明：PD-L1 CPS用于部分晚期TNBC免疫治疗选择；早期高危TNBC的新辅助免疫治疗不完全依赖PD-L1。',en:'Explanation: PD-L1 CPS helps select immunotherapy for some advanced TNBC settings; neoadjuvant immunotherapy for high-risk early TNBC is not solely dependent on PD-L1.'},
+        boneMets:{zh:'说明：骨转移会影响是否使用骨改良药物、放疗止痛、骨科固定和钙/维生素D管理。',en:'Explanation: Bone metastasis affects use of bone-modifying agents, palliative radiation, orthopedic stabilization and calcium/vitamin D management.'}
+    };
 
     function val(id) { return el[id].value; }
     function inputs() {
@@ -588,9 +681,14 @@ const BreastToolCore = (() => {
             rowsPostNeo.push(['PALB2/遗传高危阳性', '遗传咨询、对侧乳腺/卵巢等风险管理；系统治疗按受体和分期', '长期管理', '不等同于所有患者均用PARP，需看适应证和证据。']);
         }
         if (x.tVal === 'Tis') return '';
-        return regimenTable('💉 常用化疗/系统治疗方案与周期（早期/局部晚期）', rowsChemo)
-            + regimenTable('🎯 靶向/免疫/辅助强化方案与周期', [...rowsTarget, ...rowsImmuno, ...rowsPostNeo])
-            + regimenTable('🌿 内分泌治疗常用方案与疗程', rowsEndocrine);
+        return `<div data-section="regimens">`
+            + regimenTable('💉 化疗方案与周期（按分期/分型触发）', rowsChemo)
+            + regimenTable('🎯 抗HER2/靶向强化方案与周期', rowsTarget)
+            + regimenTable('🛡️ 免疫治疗方案与周期', rowsImmuno)
+            + regimenTable('🧱 术后辅助强化/残余病灶方案与周期', rowsPostNeo)
+            + regimenTable('🌿 内分泌治疗常用方案与疗程', rowsEndocrine)
+            + drugPoolsHTML()
+            + `</div>`;
     }
 
     function metastaticRegimenHTML(x) {
@@ -648,6 +746,97 @@ const BreastToolCore = (() => {
         return out;
     }
 
+
+
+    function computedLuminalCode(x) {
+        const hr = BreastToolCore.isHRPositive(x.er, x.pr);
+        const her2pos = BreastToolCore.isHER2Positive(x.her2);
+        if (x.er === 'Negative' && x.pr === 'Negative' && !her2pos) return {code:'TNBC', cn:'三阴性/TNBC', en:'Triple-negative breast cancer'};
+        if (her2pos && hr) return {code:'LumB_HER2pos', cn:'Luminal B-like HER2阳性', en:'Luminal B-like HER2-positive'};
+        if (her2pos && !hr) return {code:'HER2pos', cn:'HER2过表达型/HR阴性HER2阳性', en:'HER2-enriched / HR-negative HER2-positive'};
+        if (hr && !her2pos) {
+            if (x.ki67 === 'high' || x.pr === 'Negative' || x.grade === 'G3') return {code:'LumB_HER2neg', cn:'Luminal B-like HER2阴性', en:'Luminal B-like HER2-negative'};
+            if (x.ki67 === 'low' && x.pr === 'Positive' && (x.grade === 'G1' || x.grade === 'G2')) return {code:'LumA', cn:'Luminal A-like', en:'Luminal A-like'};
+            return {code:'HRHER2_UNCERTAIN', cn:'HR+/HER2-，Luminal A/B需结合Ki-67、PR、G和复发评分', en:'HR+/HER2-, Luminal A/B requires Ki-67, PR, grade and genomic risk'};
+        }
+        return {code:'unknown', cn:'分型信息不足', en:'Insufficient information'};
+    }
+
+    function syncLuminalAuto(x) {
+        const autoOpt = el.luminalSubtype.querySelector('option[value="auto"]');
+        const c = computedLuminalCode(x);
+        if (autoOpt) autoOpt.textContent = uiLang === 'en' ? `Auto inferred: ${c.en}` : `自动判断：${c.cn}`;
+        return c;
+    }
+
+    function decisionCard(title, status, detail, cls) {
+        return `<div class="decision-card ${cls}"><strong>${title}</strong><span>${status}</span><br><small>${detail}</small></div>`;
+    }
+
+    function directRecommendationsHTML(x, anat) {
+        const t = BreastToolCore.parseT(x.tVal);
+        const n = BreastToolCore.nMain(x.nVal);
+        const hr = BreastToolCore.isHRPositive(x.er, x.pr);
+        const her2pos = BreastToolCore.isHER2Positive(x.her2);
+        const tnbc = BreastToolCore.isTNBC(x.er, x.pr, x.her2);
+        const nodePos = BreastToolCore.isNodePositive(x.nVal);
+        const isM1 = x.mVal === 'M1';
+        const isDCIS = x.tVal === 'Tis' && n === 'N0' && BreastToolCore.isM0(x.mVal);
+        const highRisk = nodePos || t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || x.grade === 'G3' || x.ki67 === 'high';
+        const rs = x.oncotypeScore === '' ? null : Number(x.oncotypeScore);
+        const cards = [];
+        if (isM1) {
+            cards.push(decisionCard('系统治疗', '推荐', 'IV期以全身治疗为主，按HR/HER2/TNBC与分子标志物分线。', 'decision-yes'));
+            cards.push(decisionCard('局部手术/放疗', '不作为根治常规；按症状/局部控制选择', '骨痛、出血、压迫、溃疡或寡转移等场景需MDT。', 'decision-maybe'));
+        } else if (isDCIS) {
+            cards.push(decisionCard('化疗', '不推荐常规化疗', 'DCIS/0期以局部治疗±内分泌风险降低为主。', 'decision-no'));
+            cards.push(decisionCard('手术', '推荐局部治疗', '保乳或乳切按范围、切缘、乳房大小和患者偏好选择。', 'decision-yes'));
+            cards.push(decisionCard('放疗', x.surgeryType === 'bcs' ? '推荐' : '按手术方式评估', '保乳术后通常推荐全乳放疗；乳切后通常不常规。', x.surgeryType === 'bcs' ? 'decision-yes':'decision-maybe'));
+            cards.push(decisionCard('内分泌治疗', hr ? '可推荐/可讨论' : '不推荐', hr ? 'ER/PR阳性DCIS可降低同侧/对侧事件。' : '受体阴性无明确获益。', hr ? 'decision-maybe':'decision-no'));
+        } else {
+            if (hr && !her2pos) {
+                const lowRisk = t.main === 'T1' && n === 'N0' && x.grade !== 'G3' && x.ki67 !== 'high' && (rs === null || rs <= 25);
+                let chemoStatus = '需结合复发评分/绝经状态决定'; let chemoCls='decision-maybe'; let chemoDetail='HR+/HER2-化疗取决于RS、N状态、年龄/绝经、G、Ki-67和肿瘤大小。';
+                if (rs !== null && rs > 25) { chemoStatus='推荐化疗'; chemoCls='decision-yes'; chemoDetail='RS>25通常提示化疗获益较明确。'; }
+                else if (rs !== null && rs <= 10 && n === 'N0') { chemoStatus='通常不推荐化疗'; chemoCls='decision-no'; chemoDetail='N0且RS≤10/11通常化疗获益很小。'; }
+                else if (lowRisk) { chemoStatus='通常不推荐化疗'; chemoCls='decision-no'; chemoDetail='T1N0、G1-2、Ki-67不高且RS不高时以内分泌为主。'; }
+                else if (highRisk && rs === null) { chemoStatus='建议做多基因检测后决定；若不适用则倾向化疗'; chemoCls='decision-maybe'; chemoDetail='存在T2/N+/G3/Ki-67高等风险因素。'; }
+                cards.push(decisionCard('化疗', chemoStatus, chemoDetail, chemoCls));
+                cards.push(decisionCard('内分泌治疗', '推荐', 'HR阳性浸润癌的基础治疗，通常至少5年，高危可延长。', 'decision-yes'));
+                if (nodePos && (x.grade === 'G3' || x.ki67 === 'high' || t.main === 'T3' || t.main === 'T4')) cards.push(decisionCard('CDK4/6辅助强化', '推荐评估适应证', '高危HR+/HER2-可评估阿贝西利2年或瑞波西利3年。', 'decision-maybe'));
+            }
+            if (her2pos) {
+                cards.push(decisionCard('抗HER2治疗', '推荐', 'HER2阳性浸润癌通常需要抗HER2治疗；T1aN0可个体化。', 'decision-yes'));
+                if (t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || nodePos) cards.push(decisionCard('新辅助治疗', '推荐优先评估', 'T2或N+ HER2阳性常优先新辅助含抗HER2方案。', 'decision-yes'));
+                cards.push(decisionCard('化疗', t.main === 'T1' && n === 'N0' ? '通常推荐紫杉类+曲妥珠单抗或个体化' : '推荐', '抗HER2治疗多数需要与化疗联合。', 'decision-yes'));
+                if (hr) cards.push(decisionCard('内分泌治疗', '推荐', 'HR+/HER2+术后仍需内分泌治疗。', 'decision-yes'));
+            }
+            if (tnbc) {
+                if (t.main === 'T1' && n === 'N0') {
+                    const status = x.tVal === 'T1a' ? '通常不推荐；有高危因素可讨论' : x.tVal === 'T1b' ? '可考虑/倾向讨论' : '推荐化疗';
+                    cards.push(decisionCard('化疗', status, 'T1cN0通常推荐辅助化疗；T1a/b按风险个体化。', x.tVal === 'T1c'?'decision-yes':'decision-maybe'));
+                    cards.push(decisionCard('免疫治疗', '通常不推荐', 'T1N0不属于常规KEYNOTE-522式高危场景。', 'decision-no'));
+                } else {
+                    cards.push(decisionCard('新辅助化疗+免疫', '推荐', 'T2-4N0或N+早期TNBC推荐评估帕博利珠单抗联合新辅助化疗，术后继续免疫。', 'decision-yes'));
+                    cards.push(decisionCard('残余病灶强化', '按病理反应推荐', '残余病灶可评估卡培他滨；gBRCA阳性HER2阴性高危可评估奥拉帕利。', 'decision-maybe'));
+                }
+            }
+            cards.push(decisionCard('放疗', (x.surgeryType === 'bcs' || nodePos || t.main === 'T3' || t.main === 'T4') ? '推荐/强烈评估' : '按手术方式和风险评估', '保乳术后通常放疗；乳切后按T3/T4、N+、切缘等决定。', (x.surgeryType === 'bcs'||nodePos||t.main==='T3'||t.main==='T4')?'decision-yes':'decision-maybe'));
+            if (x.brca === 'positive' && !her2pos && (highRisk || tnbc)) cards.push(decisionCard('PARP抑制剂', '推荐评估', 'gBRCA阳性、HER2阴性且符合高危标准者可评估奥拉帕利1年。', 'decision-maybe'));
+        }
+        return `<div data-section="direct"><h4>✅ 直接治疗建议（根据当前输入自动判定）</h4><div class="decision-grid">${cards.join('')}</div></div>`;
+    }
+
+    function drugPoolsHTML() {
+        return `<div class="drug-pool" data-section="regimens"><strong>常用药物/方案库（每类列出≥5种可选项；实际选择需看适应证、禁忌证、可及性与MDT）：</strong><br>
+        <b>化疗方案：</b>TC（多西他赛+环磷酰胺）、AC→T/ddAC→T（多柔比星+环磷酰胺序贯紫杉醇/多西他赛）、EC→T/FEC→D、CMF、紫杉醇/卡铂→AC/EC、TCH/TCHP、卡培他滨、长春瑞滨、吉西他滨、铂类。<br>
+        <b>内分泌/卵巢功能抑制：</b>他莫昔芬、托瑞米芬、阿那曲唑、来曲唑、依西美坦、戈舍瑞林、亮丙瑞林、曲普瑞林、氟维司群、依拉司群。<br>
+        <b>抗HER2/ADC/TKI：</b>曲妥珠单抗、帕妥珠单抗、恩美曲妥珠单抗T-DM1、德曲妥珠单抗T-DXd、吡咯替尼、拉帕替尼、奈拉替尼、图卡替尼、马吉妥昔单抗。<br>
+        <b>靶向强化/晚期靶向：</b>阿贝西利、瑞波西利、哌柏西利、奥拉帕利、他拉唑帕利、阿培利司、卡匹色替、依维莫司、戈沙妥珠单抗、T-DXd。<br>
+        <b>免疫治疗：</b>乳腺癌已确立常用标准主要为帕博利珠单抗；阿替利珠单抗及其他PD-1/PD-L1药物（如度伐利尤单抗、纳武利尤单抗、卡瑞利珠单抗/替雷利珠单抗等）仅应在当地获批适应证、指南路径或临床研究中使用，不能为了凑数量替代标准方案。<br>
+        <b>骨改良/支持治疗：</b>唑来膦酸、地舒单抗、帕米膦酸、钙剂、维生素D；同时做牙科评估、骨密度管理和颌骨坏死风险教育。</div>`;
+    }
+
     function buildTreatmentHTML(x, anat, prog) {
         const subtype = BreastToolCore.receptorSubtype(x.er, x.pr, x.her2);
         const hr = BreastToolCore.isHRPositive(x.er, x.pr);
@@ -669,8 +858,9 @@ const BreastToolCore = (() => {
         html += `<div class="note-box"><strong>分期摘要</strong><br>解剖学分期：${anat.stage}（${anat.desc}）<br>预后分期：${prog.label}<br>受体亚型：${subtype}<br>AJCC表组：${prog.group || 'NA'}；生物标志物组合：${prog.combo || 'NA'}</div>`;
         html += `<div class="note-box"><strong>关键治疗变量</strong><br>手术：${optionText(el.surgeryType)}；腋窝：${optionText(el.axillarySurgery)}；切缘：${optionText(el.marginStatus)}<br>绝经：${optionText(el.menopause)}；Luminal：${luminalDisplay(x)}；Ki-67：${optionText(el.ki67)}<br>基因/分子：BRCA ${optionText(el.brca)}；PIK3CA/AKT/PTEN ${optionText(el.pik3ca)}；ESR1 ${optionText(el.esr1)}；PD-L1 ${optionText(el.pdl1)}</div>`;
         html += `</div>`;
+        html += directRecommendationsHTML(x, anat);
         const progWarnings = [...(prog.warnings || []), ...warnings];
-        if (progWarnings.length) html += `<div class="warning-box"><strong>适用性/核对提示：</strong><ul>${progWarnings.map(w => `<li>${w}</li>`).join('')}</ul></div>`;
+        if (progWarnings.length) html += `<div class="warning-box" data-section="warnings"><strong>适用性/核对提示：</strong><ul>${progWarnings.map(w => `<li>${w}</li>`).join('')}</ul></div>`;
 
         if (isM1) {
             html += `<h4>🌐 转移性/IV期治疗方向</h4><ul>`;
@@ -683,7 +873,7 @@ const BreastToolCore = (() => {
             if (x.boneMets === 'yes') html += `<li>骨转移：评估骨改良药物、钙/维生素D、牙科评估及骨相关事件预防；疼痛或结构风险时评估放疗/骨科处理。</li>`;
             html += `<li>疗效监测以影像、症状和实验室为主；ctDNA可用于特定分子追踪或临床研究，不应写成所有患者常规标准。</li>`;
             html += `</ul>`;
-            html += metastaticRegimenHTML(x);
+            html += `<div data-section="regimens">` + metastaticRegimenHTML(x) + drugPoolsHTML() + `</div>`;
             html += `<div class="danger-box"><strong>处方边界：</strong>以上仅列常见方案名称和周期，不含剂量。实际用药需根据器官功能、ECOG、既往治疗、药物可及性、合并症和MDT决定。</div>`;
             return html;
         }
@@ -721,14 +911,14 @@ const BreastToolCore = (() => {
             html += earlyRegimenHTML(x, anat);
         }
 
-        html += `<h4>🔄 随访与安全监测</h4><ul>`;
+        html += `<div data-section="followup"><h4>🔄 随访与安全监测</h4><ul>`;
         html += `<li>病史与体格检查：前3年通常每3-6个月；第4-5年每6-12个月；5年后每年。也可按NCCN原则理解为前5年每年1-4次、之后每年。</li>`;
         html += `<li>乳腺影像：年度乳腺X线摄影是核心；保乳术后首次乳腺X线通常在放疗完成后约6-12个月开始。超声/MRI按乳腺密度、遗传高危、年龄和临床发现选择。</li>`;
         html += `<li>无症状、体检无异常时，不建议常规做全身CT、PET/CT、骨扫描、肿瘤标志物或其他转移筛查；出现骨痛、持续咳嗽、神经症状、体重下降等再做针对性检查。</li>`;
         if (hr) html += `<li>内分泌治疗期间：监测依从性、潮热/血栓/子宫内膜风险、骨密度、血脂和心血管代谢风险；绝经前OFS需关注生育与骨健康。</li>`;
         if (her2pos) html += `<li>抗HER2治疗期间：按方案监测LVEF/心功能，出现心衰症状需及时评估。</li>`;
         if (tnbc) html += `<li>TNBC复发风险多集中在早期数年；仍不建议无症状常规全身影像筛查，但应加强症状教育和按期随访。</li>`;
-        html += `</ul>`;
+        html += `</ul></div>`;
 
         html += `<div class="danger-box"><strong>临床使用边界：</strong>本工具是决策支持，不是处方系统。任何药物、剂量、疗程、联合方案和检查频率均需依据当地获批适应证、医保/可及性、患者合并症和MDT意见确定。</div>`;
         return html;
@@ -738,21 +928,267 @@ const BreastToolCore = (() => {
         return selectEl.options[selectEl.selectedIndex] ? selectEl.options[selectEl.selectedIndex].text : selectEl.value;
     }
 
+    const optionEN = {
+        stageContext:{clinical:'Clinical staging cTNM (at diagnosis / before neoadjuvant therapy)', pathological:'Pathologic staging pTNM (upfront surgery)', yc:'Post-neoadjuvant clinical restaging ycTNM', yp:'Post-neoadjuvant pathologic staging ypTNM'},
+        neoadjuvantStatus:{no:'No / not started', planned:'Neoadjuvant therapy planned', yes:'Neoadjuvant therapy already given'},
+        tStage:{T0:'T0 (no evidence of primary tumor)', Tis:'Tis (DCIS / carcinoma in situ)', T1mi:'T1mi (microinvasion ≤1 mm)', T1a:'T1a (>1-5 mm)', T1b:'T1b (>5-10 mm)', T1c:'T1c (>10-20 mm)', T2:'T2 (>20-50 mm)', T3:'T3 (>50 mm)', T4a:'T4a (chest wall invasion)', T4b:'T4b (skin edema/ulcer/satellite nodules)', T4c:'T4c (T4a + T4b)', T4d:'T4d (inflammatory breast cancer)'},
+        nStage:{N0:'N0 (no regional node metastasis)', N1mi:'N1mi (micrometastasis >0.2-2.0 mm; mainly pathologic)', N1:'N1 (1-3 axillary nodes / mobile nodes, etc.)', N2a:'N2a (fixed/matted axillary nodes)', N2b:'N2b (internal mammary nodes only)', N3a:'N3a (infraclavicular nodes)', N3b:'N3b (internal mammary + axillary nodes)', N3c:'N3c (supraclavicular nodes)'},
+        mStage:{M0:'M0 / cM0 (no distant metastasis)', M0I:'M0(i+) (isolated tumor cells; treated as M0)', M1:'M1 (distant metastasis present)'},
+        responseStatus:{na:'Not applicable / not assessed', pcr:'pCR: ypT0/is ypN0', residual:'Residual invasive disease', unknown:'Unknown'},
+        luminalSubtype:{auto:'Auto infer from ER, PR, HER2, Ki-67 and grade', LumA:'Luminal A-like: ER+, higher PR, HER2-, low Ki-67, usually G1-2', LumB_HER2neg:'Luminal B-like HER2-negative: ER+, HER2-, low/negative PR or high Ki-67 or G3', LumB_HER2pos:'Luminal B-like HER2-positive: ER and/or PR positive, HER2 positive', HER2pos:'HER2-enriched: ER-, PR-, HER2+', TNBC:'Triple-negative breast cancer: ER-, PR-, HER2-', unknown:'Unknown / cannot classify'},
+        grade:{G1:'G1 low grade / well differentiated', G2:'G2 intermediate grade / moderately differentiated', G3:'G3 high grade / poorly differentiated', GX:'GX / unknown: grade cannot be assessed'},
+        erStatus:{Positive:'Positive: IHC nuclear staining ≥1% (1-10% is ER-low)', Negative:'Negative: IHC nuclear staining <1%', Unknown:'Unknown / not tested'},
+        prStatus:{Positive:'Positive: IHC nuclear staining ≥1%', Negative:'Negative: IHC nuclear staining <1%', Unknown:'Unknown / not tested'},
+        her2Status:{Negative:'Negative: IHC 0/1+ or IHC 2+ with non-amplified ISH', Positive:'Positive: IHC 3+ or IHC 2+ with amplified ISH', Equivocal:'Equivocal / needs reassessment: handled as negative for AJCC table', Unknown:'Unknown / not tested'},
+        her2Low:{unknown:'Unknown / not applicable', low:'HER2-low: IHC 1+ or IHC 2+/ISH-', ultralow:'HER2-ultralow: IHC 0 with faint membrane staining', zero:'HER2 0: no interpretable membrane staining'},
+        ki67:{unknown:'Unknown / not reported', low:'Low: <10% (some centers use <14% for Luminal A-like)', intermediate:'Intermediate: 10-19% gray zone', high:'High: ≥20% high proliferation'},
+        surgeryType:{none:'No surgery / pending', bcs:'Breast-conserving surgery', mastectomy:'Mastectomy', mastectomy_recon:'Mastectomy with reconstruction'},
+        axillarySurgery:{none:'No axillary procedure / pending', slnb:'Sentinel lymph node biopsy', alnd:'Axillary lymph node dissection', targeted:'Targeted axillary dissection / regional management'},
+        marginStatus:{unknown:'Unknown / not applicable', negative:'Negative margin', close:'Close margin', positive:'Positive margin'},
+        menopause:{unknown:'Unknown / needs confirmation by history and ovarian function', pre:'Premenopausal: ovarian function present', peri:'Perimenopausal: unstable ovarian function', post:'Postmenopausal: meets menopause definition', male:'Male breast cancer'},
+        genomicTest:{none:'Not done / not applicable', oncotype:'Oncotype DX 21-gene assay: chemo-benefit assessment for early HR+/HER2-', mammaprint_low:'MammaPrint low risk', mammaprint_high:'MammaPrint high risk', bci_low:'BCI low risk / low extended-endocrine benefit', bci_high:'BCI high risk / high extended-endocrine benefit', other:'Other assay'},
+        brca:{unknown:'Unknown / not tested', positive:'Pathogenic / likely pathogenic variant', negative:'Negative'},
+        palb2:{unknown:'Unknown / not tested', positive:'Positive', negative:'Negative'},
+        pik3ca:{unknown:'Unknown / not tested', altered:'Relevant pathway alteration present', negative:'Negative'},
+        esr1:{unknown:'Unknown / not tested', positive:'Positive', negative:'Negative'},
+        pdl1:{unknown:'Unknown / not tested', cps10:'CPS ≥10', cps1_9:'CPS 1-9', negative:'Negative / CPS <1'},
+        boneMets:{unknown:'Not applicable / unknown', yes:'Present', no:'Absent'}
+    };
+
+    function setOptionLanguage() {
+        Object.entries(el).forEach(([id,node]) => {
+            if (!node || node.tagName !== 'SELECT') return;
+            Array.from(node.options).forEach(opt => {
+                if (!opt.dataset.zh) opt.dataset.zh = opt.textContent;
+                if (uiLang === 'en' && optionEN[id] && optionEN[id][opt.value]) opt.textContent = optionEN[id][opt.value];
+                if (uiLang === 'zh') opt.textContent = opt.dataset.zh;
+            });
+        });
+        if (el.oncotypeScore) el.oncotypeScore.placeholder = uiLang === 'zh' ? '未做则留空' : 'Leave blank if not done';
+    }
+
+    function initHelpTexts() {
+        Object.keys(helpInfo).forEach(id => {
+            const node = el[id];
+            const group = node && node.closest('.select-group');
+            if (!group || group.querySelector('.help-text')) return;
+            const h = document.createElement('div');
+            h.className = 'help-text';
+            h.setAttribute('data-help-for', id);
+            group.appendChild(h);
+        });
+        refreshHelpTexts();
+    }
+
+    function refreshHelpTexts() {
+        document.querySelectorAll('.help-text[data-help-for]').forEach(h => {
+            const id = h.getAttribute('data-help-for');
+            const item = helpInfo[id];
+            if (item) h.innerHTML = uiLang === 'zh' ? '<b>解释：</b>' + item.zh.replace(/^说明：/,'') : '<b>Explanation:</b> ' + item.en.replace(/^Explanation:\s*/,'');
+        });
+        const btn = document.getElementById('helpToggleBtn');
+        if (btn) btn.textContent = helpVisible ? (uiLang === 'zh' ? '🛈 隐藏解释' : '🛈 Hide explanations') : (uiLang === 'zh' ? '🛈 显示解释' : '🛈 Show explanations');
+        document.body.classList.toggle('help-hidden', !helpVisible);
+    }
+
+    function toggleHelpTexts() {
+        helpVisible = !helpVisible;
+        refreshHelpTexts();
+    }
+
+    function optText(id) {
+        const node = el[id];
+        if (!node) return '';
+        if (node.tagName === 'SELECT') {
+            return uiLang === 'en' && optionEN[id] && optionEN[id][node.value] ? optionEN[id][node.value] : optionText(node);
+        }
+        return node.value || (uiLang === 'zh' ? '未填写' : 'Not entered');
+    }
+
+    function stageClass(stageKey, mVal) {
+        if (mVal === 'M1' || stageKey === 'IV') return 'stage-IV';
+        if (stageKey === 'pCR') return 'stage-pCR';
+        if (stageKey === '0') return 'stage-0';
+        if (stageKey === 'IA' || stageKey === 'IB') return 'stage-I';
+        if (stageKey === 'IIA' || stageKey === 'IIB') return 'stage-II';
+        if (stageKey === 'IIIA' || stageKey === 'IIIB' || stageKey === 'IIIC') return 'stage-III';
+        return 'stage-unknown';
+    }
+
+    function applyStageColor(stageKey, mVal) {
+        const resultDiv = document.getElementById('stageResult');
+        resultDiv.classList.remove('stage-0','stage-I','stage-II','stage-III','stage-IV','stage-pCR','stage-unknown');
+        resultDiv.classList.add(stageClass(stageKey, mVal));
+        resultDiv.style.background = '';
+    }
+
+    function stageLabelEn(stage) {
+        if (!stage) return 'Stage pending';
+        if (stage.includes('pCR')) return 'pCR: no anatomic stage group assigned';
+        return stage.replace('Ⅳ 期','Stage IV').replace('ⅢC 期','Stage IIIC').replace('ⅢB 期','Stage IIIB').replace('ⅢA 期','Stage IIIA').replace('ⅡB 期','Stage IIB').replace('ⅡA 期','Stage IIA').replace('ⅠB 期','Stage IB').replace('ⅠA 期','Stage IA').replace('0 期','Stage 0').replace('待核实','Needs verification');
+    }
+
+    function receptorLabelEn(x) {
+        return `${x.er === 'Positive' ? 'ER+' : x.er === 'Negative' ? 'ER-' : 'ER unknown'} / ${x.pr === 'Positive' ? 'PR+' : x.pr === 'Negative' ? 'PR-' : 'PR unknown'} / ${x.her2 === 'Positive' ? 'HER2+' : x.her2 === 'Negative' ? 'HER2-' : x.her2 === 'Equivocal' ? 'HER2 equivocal -> staged as negative' : 'HER2 unknown'} / ${x.grade}`;
+    }
+
+    function prognosticLabelEn(prog, context) {
+        if (!prog || !prog.stage) return 'AJCC prognostic stage: pending';
+        if (prog.stage === '不适用') return 'AJCC prognostic stage: not applicable after neoadjuvant therapy';
+        if (prog.stage === '待补充') return 'AJCC prognostic stage: missing required data';
+        if (prog.stage === '待核实') return 'AJCC prognostic stage: verify with original table';
+        return `AJCC ${context === 'pathological' ? 'pathologic' : 'clinical'} prognostic stage: ${prog.stage}`;
+    }
+
+    function stageDescEn(anat) {
+        if (!anat) return 'AJCC anatomic stage pending';
+        if (anat.stageKey === 'IV') return 'Any T / Any N / M1: distant metastasis.';
+        if (anat.stageKey === 'IIIC') return 'Any T / N3 / M0. N3 has priority over T4/T4d; T4d with N3 remains stage IIIC.';
+        if (anat.stageKey === 'pCR') return 'ypT0/is ypN0 cM0 after neoadjuvant therapy. AJCC does not assign a new anatomic stage group for pCR.';
+        if (anat.stageKey === '0') return 'Tis N0 M0: ductal carcinoma in situ / in-situ disease.';
+        if (!anat.stageKey) return 'This TNM combination requires manual verification against the AJCC source table or represents a special scenario.';
+        return anat.desc || 'AJCC anatomic stage evaluated.';
+    }
+
+    function regimenTableEn(title, rows) {
+        if (!rows.length) return '';
+        return `<h4>${title}</h4><table class="mini-table"><thead><tr><th>Scenario / trigger</th><th>Common regimen examples</th><th>Typical cycles / duration</th><th>Notes</th></tr></thead><tbody>${rows.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('')}</tbody></table>`;
+    }
+
+    function decisionCardEn(title, status, detail, cls) {
+        return `<div class="decision-card ${cls}"><strong>${title}</strong><span>${status}</span><br><small>${detail}</small></div>`;
+    }
+
+    function directRecommendationsHTMLEn(x, anat) {
+        const t = BreastToolCore.parseT(x.tVal), n = BreastToolCore.nMain(x.nVal);
+        const hr = BreastToolCore.isHRPositive(x.er, x.pr), her2pos = BreastToolCore.isHER2Positive(x.her2), tnbc = BreastToolCore.isTNBC(x.er, x.pr, x.her2);
+        const nodePos = BreastToolCore.isNodePositive(x.nVal), isM1 = x.mVal === 'M1', isDCIS = x.tVal === 'Tis' && n === 'N0' && BreastToolCore.isM0(x.mVal);
+        const rs = x.oncotypeScore === '' ? null : Number(x.oncotypeScore);
+        const cards = [];
+        if (isM1) {
+            cards.push(decisionCardEn('Systemic therapy', 'Recommended', 'Stage IV disease is treated primarily with systemic therapy according to HR/HER2/TNBC status and molecular markers.', 'decision-yes'));
+            cards.push(decisionCardEn('Local surgery/radiation', 'Not routine as curative therapy; use for symptoms or selected local control', 'Consider MDT for pain, bleeding, compression, ulceration or oligometastatic scenarios.', 'decision-maybe'));
+        } else if (isDCIS) {
+            cards.push(decisionCardEn('Chemotherapy', 'Not routinely recommended', 'DCIS/stage 0 is managed mainly with local therapy plus or minus endocrine risk reduction.', 'decision-no'));
+            cards.push(decisionCardEn('Surgery', 'Recommended local treatment', 'Breast-conserving surgery or mastectomy depends on extent, margins, breast size and preference.', 'decision-yes'));
+            cards.push(decisionCardEn('Radiation', x.surgeryType === 'bcs' ? 'Recommended' : 'Assess by surgery type', 'Whole-breast radiation is usually recommended after breast-conserving surgery.', x.surgeryType === 'bcs' ? 'decision-yes' : 'decision-maybe'));
+            cards.push(decisionCardEn('Endocrine therapy', hr ? 'Can be recommended / discussed' : 'Not recommended', hr ? 'ER/PR-positive DCIS may benefit for ipsilateral/contralateral event reduction.' : 'No clear benefit for receptor-negative DCIS.', hr ? 'decision-maybe' : 'decision-no'));
+        } else {
+            if (hr && !her2pos) {
+                let chemoStatus='Decide using recurrence score and risk factors', cls='decision-maybe', detail='For HR+/HER2- disease, chemotherapy depends on RS, nodal status, age/menopause, grade, Ki-67 and tumor size.';
+                if (rs !== null && rs > 25) { chemoStatus='Chemotherapy recommended'; cls='decision-yes'; detail='RS >25 generally supports meaningful chemotherapy benefit.'; }
+                else if (rs !== null && rs <= 10 && n === 'N0') { chemoStatus='Chemotherapy usually not recommended'; cls='decision-no'; detail='N0 and RS <=10/11 usually indicates very small chemotherapy benefit.'; }
+                else if (t.main === 'T1' && n === 'N0' && x.grade !== 'G3' && x.ki67 !== 'high') { chemoStatus='Chemotherapy usually not recommended'; cls='decision-no'; detail='Small node-negative low-risk HR+/HER2- disease is usually endocrine-based.'; }
+                cards.push(decisionCardEn('Chemotherapy', chemoStatus, detail, cls));
+                cards.push(decisionCardEn('Endocrine therapy', 'Recommended', 'Endocrine therapy is the backbone for HR-positive disease; regimen depends on menopausal status.', 'decision-yes'));
+                cards.push(decisionCardEn('CDK4/6 adjuvant intensification', nodePos || (anat.stageKey && anat.stageKey.startsWith('III')) ? 'Assess eligibility' : 'Usually not needed', 'Consider in high-risk HR+/HER2-negative early disease meeting criteria.', nodePos || (anat.stageKey && anat.stageKey.startsWith('III')) ? 'decision-maybe' : 'decision-no'));
+            }
+            if (her2pos) {
+                cards.push(decisionCardEn('Anti-HER2 therapy', 'Recommended unless contraindicated', 'HER2-positive invasive cancer usually requires anti-HER2 therapy with chemotherapy; intensity depends on tumor size and nodes.', 'decision-yes'));
+                cards.push(decisionCardEn('Neoadjuvant therapy', (t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || nodePos) ? 'Recommended / strongly assess' : 'Usually not required for very small N0 tumors', 'T2 or node-positive HER2+ disease commonly receives neoadjuvant anti-HER2 therapy.', (t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || nodePos) ? 'decision-yes' : 'decision-maybe'));
+            }
+            if (tnbc) {
+                cards.push(decisionCardEn('Chemotherapy', (t.main === 'T1' && n === 'N0') ? 'Depends on T1 substage; T1c usually recommended' : 'Recommended', 'TNBC systemic therapy is chemotherapy-based; T2/N+ often needs neoadjuvant therapy.', (t.main === 'T1' && n === 'N0') ? 'decision-maybe' : 'decision-yes'));
+                cards.push(decisionCardEn('Immunotherapy', (t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || nodePos) ? 'Recommended / strongly assess' : 'Not routine for very small N0 tumors', 'High-risk early TNBC can use pembrolizumab with neoadjuvant chemotherapy followed by adjuvant pembrolizumab.', (t.main === 'T2' || t.main === 'T3' || t.main === 'T4' || nodePos) ? 'decision-yes' : 'decision-no'));
+            }
+            cards.push(decisionCardEn('Radiation', x.surgeryType === 'bcs' || nodePos || t.main === 'T3' || t.main === 'T4' ? 'Recommended / assess' : 'Assess after surgery and pathology', 'Radiation depends on surgery type, nodal burden, tumor size, margins and risk factors.', x.surgeryType === 'bcs' || nodePos || t.main === 'T3' || t.main === 'T4' ? 'decision-yes' : 'decision-maybe'));
+            cards.push(decisionCardEn('PARP inhibitor', x.brca === 'positive' && !her2pos ? 'Assess eligibility' : 'Not recommended unless germline BRCA-positive and high-risk', 'Olaparib is considered for eligible high-risk HER2-negative germline BRCA-positive disease.', x.brca === 'positive' && !her2pos ? 'decision-maybe' : 'decision-no'));
+        }
+        return `<div data-section="direct"><h4>✅ Direct treatment recommendations</h4><div class="decision-grid">${cards.join('')}</div></div>`;
+    }
+
+    function commonRegimensHTMLEn(x, anat) {
+        const t = BreastToolCore.parseT(x.tVal), n = BreastToolCore.nMain(x.nVal);
+        const nodePos = BreastToolCore.isNodePositive(x.nVal), hr = BreastToolCore.isHRPositive(x.er, x.pr), her2pos = BreastToolCore.isHER2Positive(x.her2), tnbc = BreastToolCore.isTNBC(x.er, x.pr, x.her2);
+        const rowsChemo=[], rowsTarget=[], rowsEndocrine=[], rowsImmuno=[], rowsPost=[];
+        const highRisk = nodePos || ['T2','T3','T4'].includes(t.main) || x.grade === 'G3' || x.ki67 === 'high';
+        if (x.mVal === 'M1') {
+            const rows=[];
+            if (hr && !her2pos) rows.push(['HR+/HER2- metastatic disease', 'CDK4/6 inhibitor (palbociclib/ribociclib/abemaciclib) + aromatase inhibitor or fulvestrant', 'Continue until progression or intolerance', 'Prefer endocrine-based therapy unless visceral crisis.']);
+            if (x.pik3ca === 'altered') rows.push(['PIK3CA/AKT/PTEN-altered HR+/HER2- disease', 'PI3K/AKT pathway therapy + fulvestrant', 'Continue until progression or intolerance', 'Select by exact alteration, prior CDK4/6/endocrine therapy and availability.']);
+            if (x.esr1 === 'positive') rows.push(['ESR1-mutant endocrine-pretreated HR+ disease', 'Oral SERD such as elacestrant or endocrine sequencing', 'Continue until progression or intolerance', 'Use according to indication and testing platform.']);
+            if (her2pos) rows.push(['HER2+ first-line metastatic disease', 'Trastuzumab + pertuzumab + docetaxel/paclitaxel', 'Chemotherapy often ~6-8 cycles; anti-HER2 maintenance until progression', 'Monitor cardiac function.']);
+            if (her2pos) rows.push(['HER2+ pretreated disease', 'T-DXd; alternatives include T-DM1 or tucatinib + trastuzumab + capecitabine', 'Usually every 3 weeks or per regimen until progression', 'Consider brain metastases, prior ADC exposure and ILD risk.']);
+            if (tnbc && x.pdl1 === 'cps10') rows.push(['PD-L1 CPS >=10 metastatic TNBC', 'Pembrolizumab + chemotherapy such as paclitaxel/nab-paclitaxel or gemcitabine/carboplatin', 'Immunotherapy q3w/q6w; chemo per 21/28-day cycles', 'Assess immune-related adverse events.']);
+            if (tnbc) rows.push(['Metastatic TNBC chemotherapy', 'Single agents: taxanes, capecitabine, vinorelbine, gemcitabine, platinum agents', '21- or 28-day cycles until progression/intolerance', 'Avoid unnecessary multi-agent therapy unless rapid symptomatic progression.']);
+            if (x.brca === 'positive') rows.push(['gBRCA-positive HER2-negative metastatic disease', 'PARP inhibitor: olaparib or talazoparib', 'Continuous oral therapy until progression/intolerance', 'Genetic counseling recommended.']);
+            if (x.boneMets === 'yes') rows.push(['Bone metastasis', 'Zoledronic acid or denosumab with calcium/vitamin D and dental evaluation', 'Often every 4 or 12 weeks according to risk', 'Monitor hypocalcemia and osteonecrosis of jaw.']);
+            return `<div data-section="regimens">${regimenTableEn('🌐 Common metastatic regimens and cycles', rows)}${drugPoolsHTMLEn()}</div>`;
+        }
+        if (hr && !her2pos) {
+            rowsEndocrine.push(['HR+ endocrine backbone', 'Tamoxifen; aromatase inhibitor; ovarian function suppression + AI/tamoxifen for higher-risk premenopausal patients', 'Usually at least 5 years; consider 7-10 years for higher risk', 'Choice depends on menopause, risk, toxicity and adherence.']);
+            if (highRisk) rowsChemo.push(['Higher-risk HR+/HER2- when chemotherapy is indicated', 'TC (docetaxel + cyclophosphamide); AC to T or dose-dense AC to T; EC/FEC to T', 'TC q3w x4-6; AC x4 then paclitaxel weekly x12 or taxane q3w x4', 'Use recurrence score and clinical risk to decide.']);
+            if (nodePos || (anat.stageKey && anat.stageKey.startsWith('III'))) rowsTarget.push(['High-risk HR+/HER2- early disease', 'Abemaciclib + endocrine therapy; ribociclib + endocrine therapy where indicated', 'Abemaciclib commonly 2 years; ribociclib commonly 3 years; endocrine >=5 years', 'Monitor diarrhea, liver tests, blood counts, QT interval as appropriate.']);
+        }
+        if (her2pos) {
+            if (t.main === 'T1' && n === 'N0') rowsTarget.push(['Small node-negative HER2+ invasive cancer', 'TH: paclitaxel + trastuzumab', 'Paclitaxel weekly x12; trastuzumab total about 1 year', 'T1a may be individualized; HR+ also needs endocrine therapy.']);
+            if (['T2','T3','T4'].includes(t.main) || nodePos) rowsTarget.push(['HER2+ T2 or node-positive disease', 'TCHP (docetaxel + carboplatin + trastuzumab + pertuzumab); or AC/EC to THP', 'Often q3w x6 for TCHP; anti-HER2 therapy total about 1 year', 'Neoadjuvant approach commonly preferred.']);
+            rowsPost.push(['HER2+ residual invasive disease after neoadjuvant therapy', 'T-DM1', 'q3w x14 cycles', 'If pCR, usually continue trastuzumab +/- pertuzumab to complete 1 year.']);
+            if (hr) rowsEndocrine.push(['HR+/HER2+ disease', 'Endocrine therapy added after chemotherapy/anti-HER2 therapy', 'Usually >=5 years', 'Do not omit endocrine therapy when HR-positive.']);
+        }
+        if (tnbc) {
+            if (t.main === 'T1' && n === 'N0') rowsChemo.push(['T1 node-negative TNBC', 'T1a often no routine chemo; T1b individualized; T1c generally chemotherapy such as TC or AC to T', 'TC q3w x4 or anthracycline/taxane-based schedules', 'Consider grade, lymphovascular invasion, age and comorbidity.']);
+            if (['T2','T3','T4'].includes(t.main) || nodePos) {
+                rowsImmuno.push(['High-risk early TNBC (T2-4N0 or node-positive)', 'Pembrolizumab + neoadjuvant chemotherapy with paclitaxel/carboplatin followed by AC/EC, then adjuvant pembrolizumab', 'Neoadjuvant chemotherapy about 24 weeks; pembrolizumab total about 1 year', 'Assess immune contraindications and toxicity.']);
+                rowsPost.push(['Residual TNBC after neoadjuvant therapy', 'Capecitabine; coordinate with immunotherapy if used', 'Usually 6-8 cycles', 'Assess hand-foot syndrome, diarrhea and DPD risk.']);
+            }
+        }
+        if (x.brca === 'positive' && !her2pos && highRisk) rowsPost.push(['gBRCA-positive high-risk HER2-negative early disease', 'Olaparib', 'Usually 1 year', 'Requires eligibility check and genetic counseling.']);
+        return `<div data-section="regimens">${regimenTableEn('💉 Chemotherapy regimens and cycles', rowsChemo)}${regimenTableEn('🎯 Anti-HER2 / targeted intensification', rowsTarget)}${regimenTableEn('🛡️ Immunotherapy regimens and cycles', rowsImmuno)}${regimenTableEn('🧱 Post-neoadjuvant / adjuvant escalation', rowsPost)}${regimenTableEn('🌿 Endocrine therapy regimens and duration', rowsEndocrine)}${drugPoolsHTMLEn()}</div>`;
+    }
+
+    function drugPoolsHTMLEn() {
+        return `<div class="drug-pool" data-section="regimens"><strong>Common drug / regimen pool (multiple options listed where clinically relevant; actual selection depends on indication, contraindications, access and MDT):</strong><br>
+        <b>Chemotherapy:</b> TC (docetaxel + cyclophosphamide), AC to T or ddAC to T, EC/FEC to T, CMF, paclitaxel/carboplatin to AC/EC, TCH/TCHP, capecitabine, vinorelbine, gemcitabine, platinum agents.<br>
+        <b>Endocrine / ovarian suppression:</b> tamoxifen, toremifene, anastrozole, letrozole, exemestane, goserelin, leuprorelin, triptorelin, fulvestrant, elacestrant.<br>
+        <b>Anti-HER2 / ADC / TKI:</b> trastuzumab, pertuzumab, T-DM1, T-DXd, pyrotinib, lapatinib, neratinib, tucatinib, margetuximab.<br>
+        <b>Targeted intensification / advanced targeted therapy:</b> abemaciclib, ribociclib, palbociclib, olaparib, talazoparib, alpelisib, capivasertib, everolimus, sacituzumab govitecan, T-DXd.<br>
+        <b>Immunotherapy:</b> the most established breast cancer standard is pembrolizumab. Atezolizumab and other PD-1/PD-L1 agents should only be used under local approval, guideline pathways or clinical trials.<br>
+        <b>Bone-modifying / supportive therapy:</b> zoledronic acid, denosumab, pamidronate, calcium, vitamin D, dental assessment and bone health management.</div>`;
+    }
+
+    function buildTreatmentHTMLEn(x, anat, prog) {
+        const lum = computedLuminalCode(x);
+        const comboEn = !prog.combo ? 'NA' : (prog.combo === '生物标志物不完整' ? 'Incomplete biomarkers' : prog.combo);
+        const warnings = [];
+        if (x.her2 === 'Equivocal') warnings.push('HER2 equivocal is handled as negative for the AJCC table, but formal treatment decisions require IHC/ISH reassessment.');
+        if (x.context === 'clinical' && x.nVal === 'N1mi') warnings.push('N1mi is not assigned from fine-needle/core biopsy alone and usually requires complete nodal evaluation.');
+        if (x.context === 'yp' || x.neoadjuvantStatus === 'yes') warnings.push('After neoadjuvant therapy, record pretreatment cTNM, yc/ypTNM and response; do not replace initial risk with yp stage alone.');
+        let html = `<div class="two-column"><div class="note-box"><strong>Staging summary</strong><br>Anatomic stage: ${stageLabelEn(anat.stage)} (${stageDescEn(anat)})<br>Prognostic stage: ${prognosticLabelEn(prog, x.context)}<br>Subtype: ${lum.en}<br>AJCC table group: ${prog.group || 'NA'}; biomarker combination: ${comboEn}</div>`;
+        html += `<div class="note-box"><strong>Key treatment variables</strong><br>Surgery: ${optText('surgeryType')}; axilla: ${optText('axillarySurgery')}; margin: ${optText('marginStatus')}<br>Menopause: ${optText('menopause')}; Luminal: ${lum.en}; Ki-67: ${optText('ki67')}<br>Molecular: BRCA ${optText('brca')}; PIK3CA/AKT/PTEN ${optText('pik3ca')}; ESR1 ${optText('esr1')}; PD-L1 ${optText('pdl1')}</div></div>`;
+        html += directRecommendationsHTMLEn(x, anat);
+        if (prog.warnings && prog.warnings.length) warnings.push('Check AJCC applicability and source table for this combination.');
+        if (warnings.length) html += `<div class="warning-box" data-section="warnings"><strong>Applicability / verification notes:</strong><ul>${warnings.map(w => `<li>${w}</li>`).join('')}</ul></div>`;
+        html += commonRegimensHTMLEn(x, anat);
+        html += `<div data-section="followup"><h4>🔄 Follow-up and monitoring</h4><ul><li>History and physical examination: usually every 3-6 months for years 1-3, every 6-12 months for years 4-5, then annually.</li><li>Breast imaging: annual mammography is the core follow-up imaging; after breast-conserving therapy, first mammography usually begins about 6-12 months after radiation.</li><li>In asymptomatic patients with normal examination, routine whole-body CT, PET/CT, bone scan, tumor markers or metastatic screening imaging is not recommended.</li><li>Monitor treatment-specific toxicity: bone density and metabolic risk during endocrine therapy, LVEF during anti-HER2 therapy, immune-related adverse events during immunotherapy.</li></ul></div>`;
+        html += `<div class="danger-box"><strong>Clinical boundary:</strong> This tool is decision support, not a prescribing system. Drug choice, dose, schedule and monitoring must be confirmed by local indications, organ function, comorbidities, access and MDT review.</div>`;
+        return html;
+    }
+
     function updateAll() {
         const x = inputs();
+        const lum = syncLuminalAuto(x);
         const anat = BreastToolCore.computeAnatomicStage(x.tVal, x.nVal, x.mVal, x.context, x.responseStatus);
         const prog = BreastToolCore.calculatePrognosticStage(x);
-        stageDisplay.textContent = anat.stage;
-        stageDesc.textContent = `${anat.desc}${anat.caveat ? ' · ' + anat.caveat : ''}`;
-        tnmSummary.textContent = BreastToolCore.displayTNM(x.tVal, x.nVal, x.mVal, x.context);
-        biologySummary.textContent = receptorLabel(x);
-        prognosticNote.textContent = prog.label;
+        if (uiLang === 'en') {
+            stageDisplay.textContent = stageLabelEn(anat.stage);
+            stageDesc.textContent = stageDescEn(anat);
+            tnmSummary.textContent = BreastToolCore.displayTNM(x.tVal, x.nVal, x.mVal, x.context);
+            biologySummary.textContent = receptorLabelEn(x);
+            luminalSummary.textContent = 'Luminal / subtype: ' + lum.en;
+            prognosticNote.textContent = prognosticLabelEn(prog, x.context);
+            managementPanel.innerHTML = buildTreatmentHTMLEn(x, anat, prog);
+        } else {
+            stageDisplay.textContent = anat.stage;
+            stageDesc.textContent = `${anat.desc}${anat.caveat ? ' · ' + anat.caveat : ''}`;
+            tnmSummary.textContent = BreastToolCore.displayTNM(x.tVal, x.nVal, x.mVal, x.context);
+            biologySummary.textContent = receptorLabel(x);
+            luminalSummary.textContent = 'Luminal/分型：' + lum.cn;
+            prognosticNote.textContent = prog.label;
+            managementPanel.innerHTML = buildTreatmentHTML(x, anat, prog);
+        }
         prognosticNote.className = 'pill ' + (prog.stage === '待补充' || prog.stage === '待核实' || prog.stage === '不适用' ? 'warn' : (prog.stage === 'IV' || prog.stage === 'IIIC' ? 'bad' : 'good'));
-        managementPanel.innerHTML = buildTreatmentHTML(x, anat, prog);
-        const resultDiv = document.getElementById('stageResult');
-        if (anat.stage.includes('Ⅳ') || x.mVal === 'M1') resultDiv.style.background = 'linear-gradient(105deg, #f3dfe3 0%, #eccbd3 100%)';
-        else if (anat.stage.includes('Ⅲ')) resultDiv.style.background = 'linear-gradient(105deg, #fae6db 0%, #f5d2c4 100%)';
-        else resultDiv.style.background = 'linear-gradient(105deg, #fce9f0 0%, #f5dae7 100%)';
+        applyStageColor(anat.stageKey, x.mVal);
         if(expanded) collapseContent.style.maxHeight = collapseContent.scrollHeight + 220 + 'px';
     }
 
@@ -771,6 +1207,181 @@ const BreastToolCore = (() => {
         });
     });
 
+
+
+    function initSectionCollapsers() {
+        document.querySelectorAll('.section-block').forEach((block, idx) => {
+            const title = block.querySelector(':scope > .section-title');
+            if (!title || block.querySelector(':scope > .section-body')) return;
+            const body = document.createElement('div');
+            body.className = 'section-body';
+            const nodes = Array.from(block.childNodes).filter(n => n !== title);
+            nodes.forEach(n => body.appendChild(n));
+            block.appendChild(body);
+            const btn = document.createElement('button');
+            btn.className = 'toggle-btn no-print';
+            btn.type = 'button';
+            btn.textContent = uiLang === 'zh' ? '折叠' : 'Collapse';
+            title.appendChild(btn);
+            btn.addEventListener('click', (ev) => {
+                ev.stopPropagation();
+                block.classList.toggle('collapsed');
+                btn.textContent = block.classList.contains('collapsed') ? (uiLang === 'zh' ? '展开' : 'Expand') : (uiLang === 'zh' ? '折叠' : 'Collapse');
+            });
+        });
+    }
+
+    let uiLang = 'zh';
+    const labelEN = {
+        stageContext:'Staging scenario', neoadjuvantStatus:'Neoadjuvant therapy', tStage:'Primary tumor (T)', nStage:'Regional nodes (N)', mStage:'Distant metastasis (M)', responseStatus:'Pathologic response after neoadjuvant therapy',
+        luminalSubtype:'Luminal / molecular subtype', grade:'Histologic grade (G)', erStatus:'ER status', prStatus:'PR status', her2Status:'HER2 status for AJCC', her2Low:'HER2-low / ultralow', ki67:'Ki-67 index',
+        surgeryType:'Surgery type', axillarySurgery:'Axillary management', marginStatus:'Margin status', menopause:'Menopausal status', genomicTest:'Multigene assay', oncotypeScore:'Oncotype DX recurrence score',
+        brca:'gBRCA1/2', palb2:'PALB2 / other hereditary risk', pik3ca:'PIK3CA / AKT1 / PTEN', esr1:'ESR1 mutation', pdl1:'PD-L1 / CPS', boneMets:'Bone metastasis'
+    };
+    function applyStaticLanguage() {
+        document.documentElement.lang = uiLang === 'zh' ? 'zh-CN' : 'en';
+        document.getElementById('langToggleBtn').textContent = uiLang === 'zh' ? '🌐 English' : '🌐 中文';
+        const h1main = document.querySelector('h1 span:first-child');
+        if (h1main) h1main.textContent = uiLang === 'zh' ? '🎗️ 乳腺癌·AJCC8分期与治疗随访决策支持' : '🎗️ Breast Cancer AJCC8 Staging, Treatment and Follow-up Decision Support';
+        const version = document.querySelector('h1 .version-pill');
+        if (version) version.textContent = uiLang === 'zh' ? 'v1.4.0 双语解释·专业导出版' : 'v1.4.0 bilingual explanatory professional export edition';
+        const sub = document.querySelector('.subhead');
+        if (sub) sub.textContent = uiLang === 'zh'
+            ? '输入TNM、分期场景、ER/PR/HER2、G、Ki-67、Luminal分型、手术、绝经、多基因与分子检测；自动推断Luminal分型，计算AJCC第8版解剖学分期，并按AJCC临床/病理预后分期表输出可适用组合。治疗模块先给出“是否推荐”的直接结论，再列常用方案、药物池和周期。支持中英双语、解释显示/隐藏、模块折叠、打印设置、Word/Excel导出。'
+            : 'Enter TNM, staging scenario, ER/PR/HER2, grade, Ki-67, Luminal subtype, surgery, menopausal status, multigene and molecular tests. The tool infers Luminal subtype, calculates AJCC 8th anatomic stage, and shows applicable clinical/pathologic prognostic staging. The treatment module gives direct recommendations first, followed by common regimens, drug pools and cycles. It supports bilingual UI, show/hide explanations, collapsible modules, print settings, and Word/Excel export.';
+        const sectionTitles = document.querySelectorAll('.section-title strong');
+        const enTitles = ['① Staging scenario and TNM', '② Pathology and biomarkers', '③ Treatment decision variables', '④ Molecular tests and metastatic biomarkers'];
+        const zhTitles = ['① 分期场景与TNM', '② 病理与生物标志物', '③ 治疗决策关键变量', '④ 分子检测与晚期治疗标志物'];
+        sectionTitles.forEach((n,i) => { if (i < enTitles.length) n.textContent = uiLang === 'zh' ? zhTitles[i] : enTitles[i]; });
+        const muted = document.querySelectorAll('.section-title .muted');
+        const zhMuted = ['支持cTNM、pTNM、yc/yp前缀与N1mi规则','AJCC预后分期使用G、HER2、ER、PR；治疗模块再结合Luminal、Ki-67/HER2-low等','用于治疗方向、随访和风险提示，不改变AJCC解剖分期','用于PARP、PI3K/AKT、SERD、免疫、ADC等方向提示'];
+        const enMuted = ['Supports cTNM, pTNM, yc/yp prefixes and N1mi rules','AJCC prognostic staging uses grade, HER2, ER and PR; treatment guidance also uses Luminal subtype, Ki-67 and HER2-low status','Used for treatment direction, follow-up and risk notes; does not change AJCC anatomic stage','Used for PARP, PI3K/AKT, SERD, immunotherapy and ADC guidance'];
+        muted.forEach((n,i)=>{ if(i<enMuted.length) n.textContent = uiLang === 'zh' ? zhMuted[i] : enMuted[i]; });
+        Object.entries(el).forEach(([id, node]) => {
+            const label = node.closest('.select-group') && node.closest('.select-group').querySelector('label');
+            if (!label) return;
+            if (!label.dataset.zh) label.dataset.zh = label.textContent;
+            label.textContent = uiLang === 'zh' ? label.dataset.zh : (labelEN[id] || label.dataset.zh);
+        });
+        const badge = document.querySelector('.stage-badge');
+        if (badge) badge.textContent = uiLang === 'zh' ? '🧭 AJCC分期与临床决策摘要' : '🧭 AJCC Staging and Clinical Decision Summary';
+        const outputTitle = document.querySelector('.collapse-header h3 span:first-child');
+        if (outputTitle) outputTitle.textContent = uiLang === 'zh' ? '📋 专业决策支持输出' : '📋 Professional Decision-Support Output';
+        const outputPill = document.querySelector('.collapse-header h3 .version-pill');
+        if (outputPill) outputPill.textContent = uiLang === 'zh' ? 'AJCC8表格 + NCCN/CSCO/ASCO核心原则' : 'AJCC8 tables + NCCN/CSCO/ASCO core principles';
+        const settingsBtn = document.getElementById('settingsBtn'); if (settingsBtn) settingsBtn.textContent = uiLang === 'zh' ? '⚙️ 设置/Settings' : '⚙️ Settings';
+        const printBtn = document.getElementById('printBtn'); if (printBtn) printBtn.textContent = uiLang === 'zh' ? '🖨️ 打印/Print' : '🖨️ Print';
+        const exportWordBtn = document.getElementById('exportWordBtn'); if (exportWordBtn) exportWordBtn.textContent = uiLang === 'zh' ? '📄 导出Word' : '📄 Export Word';
+        const exportExcelBtn = document.getElementById('exportExcelBtn'); if (exportExcelBtn) exportExcelBtn.textContent = uiLang === 'zh' ? '📊 导出Excel' : '📊 Export Excel';
+        const copy = document.getElementById('copyPlanBtn'); if (copy) copy.textContent = uiLang === 'zh' ? '📄 复制内容' : '📄 Copy output';
+        const reset = document.getElementById('resetDefaultBtn'); if (reset) reset.textContent = uiLang === 'zh' ? '↻ 重置典型HR+/HER2- T1N0' : '↻ Reset typical HR+/HER2- T1N0';
+        const legendStrong = document.querySelector('.legend strong'); if (legendStrong) legendStrong.textContent = uiLang === 'zh' ? '📌 规则说明与适用边界' : '📌 Rules and applicability boundaries';
+        const legendUl = document.querySelector('.legend ul');
+        if (legendUl) legendUl.innerHTML = uiLang === 'zh'
+            ? '<li>解剖学分期覆盖AJCC第8版Table 8：T1包括T1mi；T0/T1+N1mi=IB；T2/T3/T4+N1mi按N1类别；任何T+N3+M0=IIIC；M1=IV。</li><li>AJCC临床/病理预后分期按Table 9/10实现：输入T/N/M组、G、HER2、ER、PR后自动查表；HER2 equivocal在AJCC表中按HER2阴性处理并提示复核。</li><li>新辅助治疗后使用yc/yp前缀；接受新辅助治疗者通常保留临床预后分期与治疗反应，不使用“病理预后分期表”重新分期。ypT0/is ypN0 cM0的pCR不分配解剖学分期组。</li><li>Luminal分型、Ki-67、多基因检测、BRCA、PIK3CA、ESR1、PD-L1、HER2-low用于治疗方向和方案强度提示，不应替代MDT和正式指南路径。</li>'
+            : '<li>Anatomic staging follows AJCC 8th edition Table 8 logic: T1 includes T1mi; T0/T1 + N1mi is IB; T2/T3/T4 + N1mi is handled as N1; any T + N3 + M0 is IIIC; M1 is IV.</li><li>AJCC clinical/pathologic prognostic staging is implemented by table lookup using T/N/M group, grade, HER2, ER and PR. HER2 equivocal is handled as HER2-negative for the AJCC table and flagged for reassessment.</li><li>After neoadjuvant therapy, use yc/yp prefixes and retain pretreatment clinical prognostic stage and response information. ypT0/is ypN0 cM0 pCR does not receive a new anatomic stage group.</li><li>Luminal subtype, Ki-67, multigene assays, BRCA, PIK3CA, ESR1, PD-L1 and HER2-low status guide treatment direction and intensity; they do not replace MDT review or formal guideline pathways.</li>';
+        const foot = document.querySelector('.footnote');
+        if (foot) foot.textContent = uiLang === 'zh' ? '参考：AJCC第8版/NCI PDQ乳腺癌分期表，NCCN Breast Cancer v2.2026，CSCO乳腺癌诊疗指南2025，ASCO/NCCN随访原则，ASCO早期乳腺癌系统治疗相关建议。常用方案与周期仅供专科讨论参考，不含剂量，不替代处方。' : 'References: AJCC 8th edition / NCI PDQ breast cancer staging tables, NCCN Breast Cancer v2.2026, CSCO Breast Cancer Guideline 2025, ASCO/NCCN follow-up principles, and ASCO systemic therapy guidance for early breast cancer. Common regimens and cycles are for specialist discussion only, do not include doses, and do not replace prescriptions.';
+        const modalTitle = document.querySelector('#settingsModal h2'); if (modalTitle) modalTitle.innerHTML = uiLang === 'zh' ? '⚙️ 打印/导出设置 <span class="muted">Print & Export Settings</span>' : '⚙️ Print & Export Settings';
+        const modalP = document.querySelector('#settingsModal p.muted'); if (modalP) modalP.textContent = uiLang === 'zh' ? '选择要包含在打印、Word或Excel导出中的模块。未勾选模块不会出现在导出内容中。' : 'Select the modules to include in print, Word or Excel export. Unchecked modules will be excluded.';
+        const selectAll = document.getElementById('selectAllExport'); if (selectAll) selectAll.textContent = uiLang === 'zh' ? '全选' : 'Select all';
+        const closeSettings = document.getElementById('closeSettings'); if (closeSettings) closeSettings.textContent = uiLang === 'zh' ? '完成' : 'Done';
+        const exportLabels = {
+            summary:['分期与临床决策摘要 / Stage summary','Stage summary'],
+            inputs:['当前输入参数 / Input parameters','Input parameters'],
+            direct:['直接治疗建议 / Direct recommendations','Direct recommendations'],
+            regimens:['常用方案与药物池 / Regimens and drug pools','Regimens and drug pools'],
+            followup:['随访与监测 / Follow-up','Follow-up and monitoring'],
+            warnings:['适用性与安全提示 / Warnings','Applicability and safety notes'],
+            rules:['规则说明与边界 / Rule notes','Rule notes and boundaries']
+        };
+        document.querySelectorAll('.export-opt').forEach(cb => {
+            const label = cb.parentElement;
+            const texts = exportLabels[cb.value];
+            if (label && texts) { label.lastChild.textContent = ' ' + (uiLang === 'zh' ? texts[0] : texts[1]); }
+        });
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            const block = btn.closest('.section-block');
+            btn.textContent = block && block.classList.contains('collapsed') ? (uiLang === 'zh' ? '展开' : 'Expand') : (uiLang === 'zh' ? '折叠' : 'Collapse');
+        });
+        setOptionLanguage();
+        refreshHelpTexts();
+    }
+
+    function applyLanguage() {
+        uiLang = uiLang === 'zh' ? 'en' : 'zh';
+        applyStaticLanguage();
+        updateAll();
+    }
+
+    function selectedExportSections() {
+        return new Set(Array.from(document.querySelectorAll('.export-opt')).filter(cb => cb.checked).map(cb => cb.value));
+    }
+
+    function currentInputRows() {
+        return ids.map(id => {
+            const node = el[id];
+            const label = node.closest('.select-group')?.querySelector('label')?.textContent || id;
+            const value = node.tagName === 'SELECT' ? optionText(node) : (node.value || '未填写');
+            return [label, value];
+        });
+    }
+
+    function buildExportHTML() {
+        const sections = selectedExportSections();
+        let html = uiLang === 'zh' ? `<h1>乳腺癌AJCC8分期与治疗随访决策支持报告</h1><p>生成时间：${new Date().toLocaleString()}</p>` : `<h1>Breast Cancer AJCC8 Staging, Treatment and Follow-up Decision Support Report</h1><p>Generated: ${new Date().toLocaleString()}</p>`;
+        if (sections.has('summary')) html += `<h2>${uiLang === 'zh' ? '分期与临床决策摘要' : 'Staging and Clinical Decision Summary'}</h2>${document.getElementById('stageResult').outerHTML}`;
+        if (sections.has('inputs')) {
+            html += `<h2>${uiLang === 'zh' ? '当前输入参数' : 'Current input parameters'}</h2><table border="1" cellspacing="0" cellpadding="6"><tbody>${currentInputRows().map(r=>`<tr><th>${r[0]}</th><td>${r[1]}</td></tr>`).join('')}</tbody></table>`;
+        }
+        const clone = managementPanel.cloneNode(true);
+        clone.querySelectorAll('[data-section]').forEach(node => {
+            const sec = node.getAttribute('data-section');
+            if (!sections.has(sec)) node.remove();
+        });
+        if (!sections.has('direct')) clone.querySelectorAll('.decision-grid').forEach(n=>n.remove());
+        if (!sections.has('regimens')) clone.querySelectorAll('.mini-table,.drug-pool').forEach(n=>n.remove());
+        if (!sections.has('followup')) clone.querySelectorAll('[data-section="followup"]').forEach(n=>n.remove());
+        if (!sections.has('warnings')) clone.querySelectorAll('.warning-box,.danger-box').forEach(n=>n.remove());
+        html += `<h2>${uiLang === 'zh' ? '决策支持输出' : 'Decision-support output'}</h2>${clone.innerHTML}`;
+        if (sections.has('rules')) html += `<h2>${uiLang === 'zh' ? '规则说明与适用边界' : 'Rules and applicability boundaries'}</h2>${document.querySelector('.legend').innerHTML}<p>${document.querySelector('.footnote').innerText}</p>`;
+        return `<html><head><meta charset="UTF-8"><style>body{font-family:Arial,'Microsoft YaHei',sans-serif;line-height:1.5}table{border-collapse:collapse;width:100%;margin:8px 0}th,td{border:1px solid #999;padding:6px;vertical-align:top}.pill,.stage-badge{display:inline-block;padding:4px 8px;border:1px solid #ccc;border-radius:12px;margin:2px}.decision-card,.note-box,.warning-box,.danger-box,.drug-pool{border:1px solid #ccc;border-radius:8px;padding:8px;margin:6px 0}</style></head><body>${html}</body></html>`;
+    }
+
+    function downloadBlob(filename, mime, content) {
+        const blob = new Blob([content], {type:mime});
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob); a.download = filename; document.body.appendChild(a); a.click();
+        setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 300);
+    }
+    function printSelected() {
+        const w = window.open('', '_blank');
+        w.document.write(buildExportHTML()); w.document.close(); w.focus(); setTimeout(()=>w.print(), 300);
+    }
+    function exportWord() {
+        downloadBlob('Breast-TNM-Decision-Support.doc', 'application/msword;charset=utf-8', buildExportHTML());
+    }
+    function exportExcel() {
+        const rows = currentInputRows();
+        let html = `<html><head><meta charset="UTF-8"></head><body><table border="1"><tr><th>${uiLang === 'zh' ? '项目' : 'Item'}</th><th>${uiLang === 'zh' ? '内容' : 'Content'}</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('')}</table><br>${Array.from(managementPanel.querySelectorAll('table')).map(t=>t.outerHTML).join('<br>')}</body></html>`;
+        downloadBlob('Breast-TNM-Decision-Support.xls', 'application/vnd.ms-excel;charset=utf-8', html);
+    }
+
+    function wireUtilityButtons() {
+        initSectionCollapsers();
+        initHelpTexts();
+        applyStaticLanguage();
+        document.getElementById('langToggleBtn').addEventListener('click', applyLanguage);
+        document.getElementById('helpToggleBtn').addEventListener('click', toggleHelpTexts);
+        document.getElementById('settingsBtn').addEventListener('click', () => document.getElementById('settingsModal').classList.add('show'));
+        document.getElementById('closeSettings').addEventListener('click', () => document.getElementById('settingsModal').classList.remove('show'));
+        document.getElementById('settingsModal').addEventListener('click', (e)=>{ if (e.target.id === 'settingsModal') e.currentTarget.classList.remove('show'); });
+        document.getElementById('selectAllExport').addEventListener('click', ()=>document.querySelectorAll('.export-opt').forEach(cb=>cb.checked=true));
+        document.getElementById('printBtn').addEventListener('click', printSelected);
+        document.getElementById('exportWordBtn').addEventListener('click', exportWord);
+        document.getElementById('exportExcelBtn').addEventListener('click', exportExcel);
+    }
+
     document.getElementById('resetDefaultBtn').addEventListener('click', function(){
         el.stageContext.value = 'clinical'; el.neoadjuvantStatus.value = 'no'; el.tStage.value = 'T1a'; el.nStage.value = 'N0'; el.mStage.value = 'M0'; el.responseStatus.value = 'na';
         el.luminalSubtype.value = 'auto'; el.grade.value = 'G1'; el.erStatus.value = 'Positive'; el.prStatus.value = 'Positive'; el.her2Status.value = 'Negative'; el.her2Low.value = 'unknown'; el.ki67.value = 'unknown';
@@ -783,6 +1394,7 @@ const BreastToolCore = (() => {
     ids.forEach(id => el[id].addEventListener('change', updateAll));
     collapseContent.style.maxHeight = '0';
     expanded = false;
+    wireUtilityButtons();
     updateAll();
 })();
 </script>
