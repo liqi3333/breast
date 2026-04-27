@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon.png" alt="Breast TNM Tool 图标" width="128" height="128" />
   <h1>Breast TNM Tool</h1>
-  <p><strong>乳腺癌 TNM 分期、分子分型与治疗计划桌面工具，同时提供 PC 原始网页与独立手机版网页</strong></p>
+  <p><strong>乳腺癌 AJCC 第 8 版解剖/预后分期与治疗随访决策支持，同时提供桌面版、PC 网页版和手机版网页。</strong></p>
   <p>
     <strong>简体中文</strong> | <a href="README.md">English</a>
   </p>
@@ -23,32 +23,28 @@
 
 ## 项目简介
 
-Breast TNM Tool 是一个基于 Electron 的桌面应用，源于单文件 HTML 临床界面。现在仓库同时提供三种网页/桌面形态：
+这个仓库把单文件临床界面封装成三种交付形态：
 
 - Windows 便携版 EXE
-- 可直接在浏览器中打开的 PC 独立 HTML 原始版本
-- 为手机浏览器单独优化的手机版 HTML 版本
+- PC 独立 HTML / GitHub Pages 在线网页版
+- 手机版独立 HTML
 
-它可以在同一个界面中查看乳腺癌 TNM 分期、分子分型、简化预后分期，以及个体化治疗和随访建议。
+本次最新更新聚焦 **桌面网页版 v1.4.0**，核心是更完整的 AJCC8 分期与治疗随访决策支持。
 
-## 核心功能
+## 最新桌面网页版亮点
 
-- 集成 TNM 分期与分子分型选择
-- 展示解剖学分期与简化预后分期
-- 提供治疗计划与随访建议面板
-- 可构建为 Windows 便携版 EXE
-- 提供 PC 独立 HTML 文件
-- 提供单独的手机版 HTML 文件
-- 支持 GitHub Actions 自动构建与自动发布
+- AJCC 第 8 版 **解剖学分期** + **临床/病理预后分期**
+- 支持 **cTNM / pTNM / ycTNM / ypTNM** 场景切换
+- 结合 **ER / PR / HER2 / 分级 / Ki-67 / Luminal 分型** 做解释和判断
+- 治疗与随访建议按 **NCCN / CSCO / ASCO** 核心原则整理
+- 内置 **中英双语解释**、模块折叠、打印设置、**Word / Excel 导出**
+- README、截图和 Release 文案同步刷新
 
 ## 在线 HTML 版本
 
-你现在可以直接在线打开两个网页入口：
-
 - PC 在线页面：<https://liqi3333.github.io/breast/>
 - 手机在线页面：<https://liqi3333.github.io/breast/mobile.html>
-
-也可以在 Releases 页面下载 PC HTML 和手机版 HTML 两个独立文件。
+- 最新 Release：<https://github.com/liqi3333/breast/releases/latest>
 
 ## 界面截图
 
@@ -56,7 +52,7 @@ Breast TNM Tool 是一个基于 Electron 的桌面应用，源于单文件 HTML 
 
 ![Breast TNM Tool overview](assets/screenshots/overview.png)
 
-### 治疗计划面板
+### 决策支持面板
 
 ![Breast TNM Tool treatment plan](assets/screenshots/treatment-plan.png)
 
@@ -64,12 +60,7 @@ Breast TNM Tool 是一个基于 Electron 的桌面应用，源于单文件 HTML 
 
 ### 下载使用
 
-打开最新 Release 页面，可下载以下任意版本：
-
-- 最新版本：<https://github.com/liqi3333/breast/releases/latest>
-- 全部 Releases：<https://github.com/liqi3333/breast/releases>
-
-包含：
+最新 Release 可下载：
 
 - Windows EXE
 - PC 独立 HTML
@@ -98,34 +89,28 @@ npm run build:html
 构建产物：
 
 ```text
-dist/Breast-TNM-Tool-1.0.4.exe
-dist-html/Breast-TNM-Tool-1.0.4.html
-dist-html/Breast-TNM-Tool-mobile-1.0.4.html
+dist/Breast-TNM-Tool-1.4.0.exe
+dist-html/Breast-TNM-Tool-1.4.0.html
+dist-html/Breast-TNM-Tool-mobile-1.4.0.html
 ```
 
 ## 自动发布流程
 
-仓库已内置 GitHub Actions 自动构建与发布流程。
-
-- 推送到 `main`：自动执行 Windows 构建检查，并上传 EXE + PC HTML + 手机版 HTML artifact
-- 推送形如 `v1.0.4` 的标签：自动构建 Windows x64 便携版 EXE、生成 PC/手机版独立 HTML 文件、创建 GitHub Release，并上传这三类文件
+- 推送到 `main`：自动执行构建检查，并上传 EXE + PC HTML + 手机版 HTML artifact
+- 推送形如 `v1.4.0` 的标签：自动构建 Windows x64 便携版 EXE、生成独立 HTML 文件、创建 GitHub Release，并上传全部附件
 
 示例：
 
 ```bash
-git tag v1.0.4
-git push origin v1.0.4
+git tag v1.4.0
+git push origin v1.4.0
 ```
 
-## Release 说明模板
-
-双语发布说明模板位于：
+## Release 模板
 
 ```text
 docs/RELEASE_TEMPLATE.md
 ```
-
-Release 工作流会把这个文件作为发布说明正文，再自动附加 GitHub 生成的更新说明。
 
 ## 项目结构
 

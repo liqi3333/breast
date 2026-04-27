@@ -1,7 +1,7 @@
 <div align="center">
   <img src="assets/icon.png" alt="Breast TNM Tool icon" width="128" height="128" />
   <h1>Breast TNM Tool</h1>
-  <p><strong>Desktop app plus standalone PC and mobile web versions for breast cancer TNM staging, molecular subtype stratification, and treatment planning.</strong></p>
+  <p><strong>AJCC 8th breast cancer anatomic/prognostic staging and treatment follow-up decision support, with desktop, desktop web, and mobile web delivery.</strong></p>
   <p>
     <a href="README.zh-CN.md">简体中文</a> | <strong>English</strong>
   </p>
@@ -23,36 +23,28 @@
 
 ## Overview
 
-Breast TNM Tool is an Electron desktop application built from a single-file HTML clinical interface. The repository now provides both:
+This repository packages a single-file clinical interface for breast cancer staging and treatment support into three delivery forms:
 
-- a Windows portable EXE
-- a standalone HTML version that can be opened directly in a browser
+- Windows portable EXE
+- desktop standalone HTML / GitHub Pages web app
+- mobile standalone HTML
 
-The app helps users review breast cancer TNM stage, molecular subtype, simplified prognostic staging, and individualized treatment follow-up suggestions in one screen.
+The latest desktop web update is **v1.4.0**, focused on AJCC 8th edition staging and richer treatment follow-up decision support.
 
-Separate web entry points are now available:
+## What's new in the latest desktop web version
 
-- PC web version: <https://liqi3333.github.io/breast/>
-- Mobile web version: <https://liqi3333.github.io/breast/mobile.html>
-
-## Highlights
-
-- Integrated TNM staging and molecular subtype selection
-- Simplified anatomic stage and prognostic stage display
-- Treatment planning and follow-up recommendation panel
-- Windows portable EXE build output
-- Standalone PC HTML file for direct browser use
-- Separate mobile-optimized HTML version for phones
-- Automated GitHub Actions build and release pipeline
+- AJCC 8th **anatomic staging** plus **clinical/pathologic prognostic staging**
+- Scenario-aware inputs for **cTNM / pTNM / ycTNM / ypTNM**
+- Biomarker-driven interpretation for **ER / PR / HER2 / grade / Ki-67 / Luminal subtype**
+- Treatment and follow-up output aligned to core **NCCN / CSCO / ASCO** principles
+- Built-in **bilingual explanations**, collapsible modules, print settings, and **Word / Excel export**
+- Updated screenshots and release documentation
 
 ## Online HTML Version
 
-You can use the web versions here:
-
-- PC web page: <https://liqi3333.github.io/breast/>
-- Mobile web page: <https://liqi3333.github.io/breast/mobile.html>
-
-You can also download both standalone HTML files from Releases.
+- Desktop web: <https://liqi3333.github.io/breast/>
+- Mobile web: <https://liqi3333.github.io/breast/mobile.html>
+- Latest release: <https://github.com/liqi3333/breast/releases/latest>
 
 ## Screenshots
 
@@ -60,7 +52,7 @@ You can also download both standalone HTML files from Releases.
 
 ![Breast TNM Tool overview](assets/screenshots/overview.png)
 
-### Treatment plan panel
+### Decision support panel
 
 ![Breast TNM Tool treatment plan](assets/screenshots/treatment-plan.png)
 
@@ -68,16 +60,11 @@ You can also download both standalone HTML files from Releases.
 
 ### Download
 
-Open the latest release page and download any of these assets:
-
-- Latest release: <https://github.com/liqi3333/breast/releases/latest>
-- All releases: <https://github.com/liqi3333/breast/releases>
-
-Included assets:
+From the latest release you can download:
 
 - Windows EXE
-- PC standalone HTML
-- Mobile standalone HTML
+- desktop standalone HTML
+- mobile standalone HTML
 
 ### Run locally
 
@@ -102,34 +89,28 @@ npm run build:html
 Build outputs:
 
 ```text
-dist/Breast-TNM-Tool-1.0.4.exe
-dist-html/Breast-TNM-Tool-1.0.4.html
-dist-html/Breast-TNM-Tool-mobile-1.0.4.html
+dist/Breast-TNM-Tool-1.4.0.exe
+dist-html/Breast-TNM-Tool-1.4.0.html
+dist-html/Breast-TNM-Tool-mobile-1.4.0.html
 ```
 
 ## Release Automation
 
-This repository includes GitHub Actions workflows for build and release automation.
-
-- Push to `main`: runs Windows build validation and uploads EXE + desktop HTML + mobile HTML workflow artifacts
-- Push a tag like `v1.0.4`: automatically builds the Windows x64 portable EXE, generates standalone desktop/mobile HTML files, creates a GitHub Release, and uploads all assets
+- Push to `main`: runs build validation and uploads EXE + desktop HTML + mobile HTML workflow artifacts
+- Push a tag like `v1.4.0`: automatically builds the Windows x64 portable EXE, generates standalone HTML assets, creates a GitHub Release, and uploads all files
 
 Example:
 
 ```bash
-git tag v1.0.4
-git push origin v1.0.4
+git tag v1.4.0
+git push origin v1.4.0
 ```
 
 ## Release Notes Template
 
-The bilingual release notes template is located at:
-
 ```text
 docs/RELEASE_TEMPLATE.md
 ```
-
-The release workflow uses this file as the main body of the release notes, then appends GitHub-generated notes automatically.
 
 ## Project Structure
 
@@ -158,5 +139,5 @@ The release workflow uses this file as the main body of the release notes, then 
 ## Notes
 
 - `node_modules/`, `dist/`, and `dist-html/` are not committed
-- On first launch, Windows SmartScreen may show a warning because the EXE is not code signed
+- Windows SmartScreen may appear because the EXE is not code signed
 - Medical content is for informational use only and does not replace formal diagnosis or clinical decision-making

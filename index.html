@@ -114,7 +114,7 @@
         <span class="version-pill">v1.4.0 双语解释·专业导出版</span>
     </h1>
     <div class="subhead">
-        输入TNM、分期场景、ER/PR/HER2、G、Ki-67、Luminal分型、手术、绝经、多基因与分子检测；自动推断Luminal分型，计算AJCC第8版解剖学分期，并按AJCC临床/病理预后分期表输出可适用组合。治疗模块先给出“是否推荐”的直接结论，再列常用方案、药物池和周期。支持中英双语、模块折叠、打印设置、Word/Excel导出。
+        输入TNM、分期场景、ER/PR/HER2、G、Ki-67、Luminal分型、手术、绝经、多基因与分子检测；自动推断Luminal分型，计算AJCC第8版解剖学分期，并按AJCC临床/病理预后分期表输出可适用组合。治疗模块先给出“是否推荐”的直接结论，再列常用方案、药物池和周期。支持中英双语、解释显示/隐藏、模块折叠、打印设置、Word/Excel导出。
     </div>
 
     <div class="top-actions no-print">
@@ -166,14 +166,44 @@
             <div class="select-group">
                 <label>区域淋巴结 N</label>
                 <select id="nStage">
-                    <option value="N0" selected>N0（无区域淋巴结转移）</option>
-                    <option value="N1mi">N1mi（微转移，>0.2-2.0mm；主要为病理评估）</option>
-                    <option value="N1">N1（1-3枚腋窝/可活动等）</option>
-                    <option value="N2a">N2a（腋窝淋巴结固定/融合）</option>
-                    <option value="N2b">N2b（仅内乳淋巴结转移）</option>
-                    <option value="N3a">N3a（锁骨下淋巴结转移）</option>
-                    <option value="N3b">N3b（内乳+腋窝淋巴结转移）</option>
-                    <option value="N3c">N3c（锁骨上淋巴结转移）</option>
+                    <option value="cN0" selected>cN0：无区域淋巴结转移（临床触诊/影像）</option>
+                    <option value="cN1">cN1：同侧腋窝淋巴结可移动</option>
+                    <option value="cN2a">cN2a：同侧腋窝淋巴结固定或相互融合</option>
+                    <option value="cN2b">cN2b：仅有同侧内乳淋巴结转移，无腋窝淋巴结转移证据</option>
+                    <option value="cN3a">cN3a：同侧锁骨下淋巴结转移</option>
+                    <option value="cN3b">cN3b：同侧内乳淋巴结+腋窝淋巴结转移</option>
+                    <option value="cN3c">cN3c：同侧锁骨上淋巴结转移</option>
+                    <option value="pN0">pN0：无区域淋巴结转移（病理检查）</option>
+                    <option value="pN0(i+)">pN0(i+)：孤立肿瘤细胞（≤0.2mm）</option>
+                    <option value="pN0(mol+)">pN0(mol+)：分子生物学阳性（RT-PCR），无形态学转移</option>
+                    <option value="pN1mi">pN1mi：微小转移（>0.2mm ≤2mm）</option>
+                    <option value="pN1a">pN1a：1-3枚腋窝淋巴结转移（至少1枚>2mm）</option>
+                    <option value="pN1b">pN1b：前哨淋巴结内乳转移（微/宏转移），腋窝无转移</option>
+                    <option value="pN1c">pN1c：pN1a + pN1b</option>
+                    <option value="pN2a">pN2a：4-9枚腋窝淋巴结转移（至少1枚>2mm）</option>
+                    <option value="pN2b">pN2b：临床发现内乳淋巴结转移，腋窝无转移，病理证实宏转移</option>
+                    <option value="pN3a">pN3a：≥10枚腋窝淋巴结转移；或锁骨下淋巴结转移</option>
+                    <option value="pN3b">pN3b：临床内乳淋巴结转移+≥1枚腋窝阳性；或前哨内乳阳性+临床/影像内乳阳性</option>
+                    <option value="pN3c">pN3c：同侧锁骨上淋巴结转移</option>
+                    <option value="ycN0">ycN0：新辅助后临床N0</option>
+                    <option value="ycN1">ycN1：新辅助后临床N1（同侧腋窝可移动）</option>
+                    <option value="ycN2a">ycN2a：新辅助后临床N2a（固定/融合）</option>
+                    <option value="ycN2b">ycN2b：新辅助后临床N2b</option>
+                    <option value="ycN3a">ycN3a：新辅助后临床N3a</option>
+                    <option value="ycN3b">ycN3b：新辅助后临床N3b</option>
+                    <option value="ycN3c">ycN3c：新辅助后临床N3c</option>
+                    <option value="ypN0">ypN0：新辅助后病理N0</option>
+                    <option value="ypN0(i+)">ypN0(i+)：新辅助后病理N0(i+)</option>
+                    <option value="ypN0(mol+)">ypN0(mol+)：新辅助后病理N0(mol+)</option>
+                    <option value="ypN1mi">ypN1mi：新辅助后病理N1mi</option>
+                    <option value="ypN1a">ypN1a：新辅助后病理N1a</option>
+                    <option value="ypN1b">ypN1b：新辅助后病理N1b</option>
+                    <option value="ypN1c">ypN1c：新辅助后病理N1c</option>
+                    <option value="ypN2a">ypN2a：新辅助后病理N2a</option>
+                    <option value="ypN2b">ypN2b：新辅助后病理N2b</option>
+                    <option value="ypN3a">ypN3a：新辅助后病理N3a</option>
+                    <option value="ypN3b">ypN3b：新辅助后病理N3b</option>
+                    <option value="ypN3c">ypN3c：新辅助后病理N3c</option>
                 </select>
             </div>
             <div class="select-group">
@@ -373,13 +403,21 @@ const BreastToolCore = (() => {
         if (tVal.startsWith('T4')) return { main: 'T4', sub: tVal.slice(2) };
         return { main: tVal, sub: '' };
     }
-    function nMain(nVal) {
-        if (nVal === 'N1mi') return 'N1mi';
-        if (nVal.startsWith('N1')) return 'N1';
-        if (nVal.startsWith('N2')) return 'N2';
-        if (nVal.startsWith('N3')) return 'N3';
-        return nVal;
+
+    function getNClass(nVal) {
+        const base = nVal.replace(/^(c|p|yc|yp)/, '');
+        if (base === 'N0' || base === 'N0(i+)' || base === 'N0(mol+)') return 'N0';
+        if (base === 'N1mi') return 'N1mi';
+        if (base === 'N1' || base === 'N1a' || base === 'N1b' || base === 'N1c') return 'N1';
+        if (base === 'N2a' || base === 'N2b') return 'N2';
+        if (base === 'N3a' || base === 'N3b' || base === 'N3c') return 'N3';
+        return base;
     }
+
+    function nMain(nVal) {
+        return getNClass(nVal);
+    }
+
     function isM0(mVal) { return mVal === 'M0' || mVal === 'M0I'; }
     function stageText(s) { return s === '0' ? '0 期' : `${s} 期`; }
 
@@ -392,7 +430,9 @@ const BreastToolCore = (() => {
 
     function displayTNM(tVal, nVal, mVal, context) {
         const p = prefixFor(context);
-        return `${p.t}${tVal} ${p.n}${nVal} ${mVal === 'M0I' ? 'cM0(i+)' : `${p.m}${mVal}`}`;
+        const nDisplay = /^(c|p|yc|yp)/.test(nVal) ? nVal : `${p.n}${nVal}`;
+        let mDisplay = mVal === 'M0I' ? 'cM0(i+)' : `${p.m}${mVal}`;
+        return `${p.t}${tVal} ${nDisplay} ${mDisplay}`;
     }
 
     function computeAnatomicStage(tVal, nVal, mVal, context, responseStatus) {
@@ -504,10 +544,11 @@ const BreastToolCore = (() => {
 
 (function(){
     const ids = [
-        'stageContext','neoadjuvantStatus','tStage','nStage','mStage','responseStatus','luminalSubtype','grade','erStatus','prStatus','her2Status','her2Low','ki67',
+        'stageContext','neoadjuvantStatus','tStage','mStage','responseStatus','luminalSubtype','grade','erStatus','prStatus','her2Status','her2Low','ki67',
         'surgeryType','axillarySurgery','marginStatus','menopause','genomicTest','oncotypeScore','brca','palb2','pik3ca','esr1','pdl1','boneMets'
     ];
     const el = Object.fromEntries(ids.map(id => [id, document.getElementById(id)]));
+    el.nStage = document.getElementById('nStage');
     const stageDisplay = document.getElementById('stageDisplay');
     const stageDesc = document.getElementById('stageDesc');
     const tnmSummary = document.getElementById('tnmSummary');
@@ -524,9 +565,9 @@ const BreastToolCore = (() => {
     let helpVisible = true;
     const helpInfo = {
         stageContext:{zh:'说明：用于区分诊断时临床分期、先手术后的病理分期，以及新辅助治疗后的再分期。不同场景能否使用AJCC预后分期表不同。',en:'Explanation: distinguishes clinical staging at diagnosis, pathologic staging after upfront surgery, and restaging after neoadjuvant therapy. Applicability of AJCC prognostic staging differs by scenario.'},
-        neoadjuvantStatus:{zh:'说明：新辅助治疗指手术前先进行化疗、靶向、免疫或内分泌等系统治疗。接受新辅助后，应记录治疗前cTNM和治疗后yc/ypTNM。',en:'Explanation: neoadjuvant therapy is systemic treatment given before surgery. After neoadjuvant therapy, both pretreatment cTNM and post-treatment yc/ypTNM should be recorded.'},
+        neoadjuvantStatus:{zh:'说明：新辅助治疗指手术前先进行化疗、靶向、免疫或内分泌等系统治疗。接受新辅助后，需记录治疗前cTNM和治疗后yc/ypTNM。',en:'Explanation: neoadjuvant therapy is systemic treatment given before surgery. After neoadjuvant therapy, both pretreatment cTNM and post-treatment yc/ypTNM should be recorded.'},
         tStage:{zh:'说明：T描述原发肿瘤大小和局部侵犯范围。T1≤2cm，T2>2-5cm，T3>5cm，T4表示胸壁/皮肤侵犯或炎性乳腺癌。',en:'Explanation: T describes primary tumor size and local extension. T1 is ≤2 cm, T2 is >2-5 cm, T3 is >5 cm, and T4 indicates chest wall/skin involvement or inflammatory breast cancer.'},
-        nStage:{zh:'说明：N描述区域淋巴结转移范围。N1mi为微转移，通常是病理评估概念；N3表示锁骨下/锁骨上或广泛内乳等高负荷区域淋巴结受累。',en:'Explanation: N describes regional lymph node involvement. N1mi indicates micrometastasis and is mainly a pathologic concept; N3 indicates high-burden regional nodal disease such as infraclavicular/supraclavicular or extensive internal mammary involvement.'},
+        nStage:{zh:'说明：N描述区域淋巴结转移范围。临床cN根据触诊/影像，病理pN根据术后病理，二者细分不同。cN1为可移动腋窝淋巴结，pN1a为1-3枚宏转移；N3为高负荷区域淋巴结受累。',en:'Explanation: N describes regional nodal involvement. Clinical cN is based on palpation/imaging, pathologic pN on postoperative pathology, with distinct subcategories. cN1 indicates mobile axillary nodes; pN1a indicates 1-3 macrometastases. N3 reflects high-burden regional nodal disease.'},
         mStage:{zh:'说明：M描述是否有远处转移。M1即IV期；M0(i+)指孤立肿瘤细胞，AJCC分期中通常按M0处理。',en:'Explanation: M indicates distant metastasis. M1 is stage IV; M0(i+) means isolated tumor cells and is generally handled as M0 for AJCC stage grouping.'},
         responseStatus:{zh:'说明：pCR通常指新辅助治疗后无残余浸润癌（可有原位癌），且淋巴结无浸润转移。pCR影响后续强化治疗选择。',en:'Explanation: pCR usually means no residual invasive cancer after neoadjuvant therapy (in-situ disease may remain) and no invasive nodal disease. pCR influences postoperative escalation/de-escalation decisions.'},
         luminalSubtype:{zh:'说明：Luminal分型是基于ER/PR/HER2/Ki-67/G等近似推断的临床分子分型，用于治疗方向；正式病理仍以ER、PR、HER2和分级等原始指标为准。',en:'Explanation: Luminal subtype is an approximate clinical molecular subtype inferred from ER/PR/HER2/Ki-67/grade. It guides treatment direction, but the original ER, PR, HER2 and grade remain the primary pathology variables.'},
@@ -553,7 +594,7 @@ const BreastToolCore = (() => {
     function val(id) { return el[id].value; }
     function inputs() {
         return {
-            context: val('stageContext'), neoadjuvantStatus: val('neoadjuvantStatus'), tVal: val('tStage'), nVal: val('nStage'), mVal: val('mStage'), responseStatus: val('responseStatus'),
+            context: val('stageContext'), neoadjuvantStatus: val('neoadjuvantStatus'), tVal: val('tStage'), nVal: el.nStage.value, mVal: val('mStage'), responseStatus: val('responseStatus'),
             luminalSubtype: val('luminalSubtype'), grade: val('grade'), er: val('erStatus'), pr: val('prStatus'), her2: val('her2Status'), her2Low: val('her2Low'), ki67: val('ki67'),
             surgeryType: val('surgeryType'), axillarySurgery: val('axillarySurgery'), marginStatus: val('marginStatus'), menopause: val('menopause'),
             genomicTest: val('genomicTest'), oncotypeScore: el.oncotypeScore.value, brca: val('brca'), palb2: val('palb2'), pik3ca: val('pik3ca'), esr1: val('esr1'), pdl1: val('pdl1'), boneMets: val('boneMets')
@@ -746,8 +787,6 @@ const BreastToolCore = (() => {
         return out;
     }
 
-
-
     function computedLuminalCode(x) {
         const hr = BreastToolCore.isHRPositive(x.er, x.pr);
         const her2pos = BreastToolCore.isHER2Positive(x.her2);
@@ -932,7 +971,46 @@ const BreastToolCore = (() => {
         stageContext:{clinical:'Clinical staging cTNM (at diagnosis / before neoadjuvant therapy)', pathological:'Pathologic staging pTNM (upfront surgery)', yc:'Post-neoadjuvant clinical restaging ycTNM', yp:'Post-neoadjuvant pathologic staging ypTNM'},
         neoadjuvantStatus:{no:'No / not started', planned:'Neoadjuvant therapy planned', yes:'Neoadjuvant therapy already given'},
         tStage:{T0:'T0 (no evidence of primary tumor)', Tis:'Tis (DCIS / carcinoma in situ)', T1mi:'T1mi (microinvasion ≤1 mm)', T1a:'T1a (>1-5 mm)', T1b:'T1b (>5-10 mm)', T1c:'T1c (>10-20 mm)', T2:'T2 (>20-50 mm)', T3:'T3 (>50 mm)', T4a:'T4a (chest wall invasion)', T4b:'T4b (skin edema/ulcer/satellite nodules)', T4c:'T4c (T4a + T4b)', T4d:'T4d (inflammatory breast cancer)'},
-        nStage:{N0:'N0 (no regional node metastasis)', N1mi:'N1mi (micrometastasis >0.2-2.0 mm; mainly pathologic)', N1:'N1 (1-3 axillary nodes / mobile nodes, etc.)', N2a:'N2a (fixed/matted axillary nodes)', N2b:'N2b (internal mammary nodes only)', N3a:'N3a (infraclavicular nodes)', N3b:'N3b (internal mammary + axillary nodes)', N3c:'N3c (supraclavicular nodes)'},
+        nStage:{
+            cN0:'cN0: No regional lymph node metastasis (clinical palpation/imaging)',
+            cN1:'cN1: Mobile ipsilateral axillary lymph node(s)',
+            cN2a:'cN2a: Fixed or matted ipsilateral axillary lymph nodes',
+            cN2b:'cN2b: Clinical internal mammary node(s) without axillary involvement',
+            cN3a:'cN3a: Infraclavicular lymph node(s)',
+            cN3b:'cN3b: Internal mammary node(s) + axillary node(s)',
+            cN3c:'cN3c: Supraclavicular lymph node(s)',
+            pN0:'pN0: No regional lymph node metastasis (pathologic)',
+            'pN0(i+)':'pN0(i+): Isolated tumor cells (≤0.2 mm)',
+            'pN0(mol+)':'pN0(mol+): Molecular positive (RT-PCR) without morphologic metastasis',
+            pN1mi:'pN1mi: Micrometastasis (>0.2 mm ≤2 mm)',
+            pN1a:'pN1a: 1-3 axillary node(s) macrometastasis (>2 mm)',
+            pN1b:'pN1b: Sentinel internal mammary node micrometastasis or macrometastasis without axillary involvement',
+            pN1c:'pN1c: pN1a + pN1b',
+            pN2a:'pN2a: 4-9 axillary node(s) macrometastasis (>2 mm)',
+            pN2b:'pN2b: Clinically detected internal mammary node(s) (macrometastasis) without axillary nodal involvement',
+            pN3a:'pN3a: ≥10 axillary node(s) or infraclavicular node(s)',
+            pN3b:'pN3b: Clinically IMN + ≥1 axillary node(s); or sentinel IMN positive + clinical/imaging IMN positive',
+            pN3c:'pN3c: Supraclavicular lymph node(s)',
+            ycN0:'ycN0: Post-neoadjuvant clinical N0',
+            ycN1:'ycN1: Post-neoadjuvant clinical N1',
+            ycN2a:'ycN2a: Post-neoadjuvant clinical N2a',
+            ycN2b:'ycN2b: Post-neoadjuvant clinical N2b',
+            ycN3a:'ycN3a: Post-neoadjuvant clinical N3a',
+            ycN3b:'ycN3b: Post-neoadjuvant clinical N3b',
+            ycN3c:'ycN3c: Post-neoadjuvant clinical N3c',
+            ypN0:'ypN0: Post-neoadjuvant pathologic N0',
+            'ypN0(i+)':'ypN0(i+): Post-neoadjuvant pathologic N0(i+)',
+            'ypN0(mol+)':'ypN0(mol+): Post-neoadjuvant pathologic N0(mol+)',
+            ypN1mi:'ypN1mi: Post-neoadjuvant pathologic N1mi',
+            ypN1a:'ypN1a: Post-neoadjuvant pathologic N1a',
+            ypN1b:'ypN1b: Post-neoadjuvant pathologic N1b',
+            ypN1c:'ypN1c: Post-neoadjuvant pathologic N1c',
+            ypN2a:'ypN2a: Post-neoadjuvant pathologic N2a',
+            ypN2b:'ypN2b: Post-neoadjuvant pathologic N2b',
+            ypN3a:'ypN3a: Post-neoadjuvant pathologic N3a',
+            ypN3b:'ypN3b: Post-neoadjuvant pathologic N3b',
+            ypN3c:'ypN3c: Post-neoadjuvant pathologic N3c'
+        },
         mStage:{M0:'M0 / cM0 (no distant metastasis)', M0I:'M0(i+) (isolated tumor cells; treated as M0)', M1:'M1 (distant metastasis present)'},
         responseStatus:{na:'Not applicable / not assessed', pcr:'pCR: ypT0/is ypN0', residual:'Residual invasive disease', unknown:'Unknown'},
         luminalSubtype:{auto:'Auto infer from ER, PR, HER2, Ki-67 and grade', LumA:'Luminal A-like: ER+, higher PR, HER2-, low Ki-67, usually G1-2', LumB_HER2neg:'Luminal B-like HER2-negative: ER+, HER2-, low/negative PR or high Ki-67 or G3', LumB_HER2pos:'Luminal B-like HER2-positive: ER and/or PR positive, HER2 positive', HER2pos:'HER2-enriched: ER-, PR-, HER2+', TNBC:'Triple-negative breast cancer: ER-, PR-, HER2-', unknown:'Unknown / cannot classify'},
@@ -1207,8 +1285,6 @@ const BreastToolCore = (() => {
         });
     });
 
-
-
     function initSectionCollapsers() {
         document.querySelectorAll('.section-block').forEach((block, idx) => {
             const title = block.querySelector(':scope > .section-title');
@@ -1258,10 +1334,11 @@ const BreastToolCore = (() => {
         const enMuted = ['Supports cTNM, pTNM, yc/yp prefixes and N1mi rules','AJCC prognostic staging uses grade, HER2, ER and PR; treatment guidance also uses Luminal subtype, Ki-67 and HER2-low status','Used for treatment direction, follow-up and risk notes; does not change AJCC anatomic stage','Used for PARP, PI3K/AKT, SERD, immunotherapy and ADC guidance'];
         muted.forEach((n,i)=>{ if(i<enMuted.length) n.textContent = uiLang === 'zh' ? zhMuted[i] : enMuted[i]; });
         Object.entries(el).forEach(([id, node]) => {
+            if (!node || node.tagName !== 'SELECT') return;
             const label = node.closest('.select-group') && node.closest('.select-group').querySelector('label');
             if (!label) return;
             if (!label.dataset.zh) label.dataset.zh = label.textContent;
-            label.textContent = uiLang === 'zh' ? label.dataset.zh : (labelEN[id] || label.dataset.zh);
+            label.textContent = uiLang === 'zh' ? label.dataset.zh : (labelEN[id] || (id==='nStage' ? 'Regional nodes (N)' : label.dataset.zh));
         });
         const badge = document.querySelector('.stage-badge');
         if (badge) badge.textContent = uiLang === 'zh' ? '🧭 AJCC分期与临床决策摘要' : '🧭 AJCC Staging and Clinical Decision Summary';
@@ -1319,8 +1396,9 @@ const BreastToolCore = (() => {
     }
 
     function currentInputRows() {
-        return ids.map(id => {
+        return ids.concat(['nStage']).map(id => {
             const node = el[id];
+            if (!node) return ['',''];
             const label = node.closest('.select-group')?.querySelector('label')?.textContent || id;
             const value = node.tagName === 'SELECT' ? optionText(node) : (node.value || '未填写');
             return [label, value];
@@ -1383,10 +1461,25 @@ const BreastToolCore = (() => {
     }
 
     document.getElementById('resetDefaultBtn').addEventListener('click', function(){
-        el.stageContext.value = 'clinical'; el.neoadjuvantStatus.value = 'no'; el.tStage.value = 'T1a'; el.nStage.value = 'N0'; el.mStage.value = 'M0'; el.responseStatus.value = 'na';
+        el.stageContext.value = 'clinical'; el.neoadjuvantStatus.value = 'no'; el.tStage.value = 'T1a'; el.nStage.value = 'cN0'; el.mStage.value = 'M0'; el.responseStatus.value = 'na';
         el.luminalSubtype.value = 'auto'; el.grade.value = 'G1'; el.erStatus.value = 'Positive'; el.prStatus.value = 'Positive'; el.her2Status.value = 'Negative'; el.her2Low.value = 'unknown'; el.ki67.value = 'unknown';
         el.surgeryType.value = 'none'; el.axillarySurgery.value = 'none'; el.marginStatus.value = 'unknown'; el.menopause.value = 'unknown'; el.genomicTest.value = 'none'; el.oncotypeScore.value = '';
         el.brca.value = 'unknown'; el.palb2.value = 'unknown'; el.pik3ca.value = 'unknown'; el.esr1.value = 'unknown'; el.pdl1.value = 'unknown'; el.boneMets.value = 'unknown';
+        updateAll();
+    });
+
+    el.nStage.addEventListener('change', function() {
+        const nVal = el.nStage.value;
+        const prefix = nVal.match(/^(c|p|yc|yp)/)?.[0];
+        if (prefix) {
+            let context = '';
+            if (prefix === 'c') context = 'clinical';
+            else if (prefix === 'p') context = 'pathological';
+            else if (prefix === 'yc') context = 'yc';
+            else if (prefix === 'yp') context = 'yp';
+            if (context) el.stageContext.value = context;
+            if (prefix === 'yc' || prefix === 'yp') el.neoadjuvantStatus.value = 'yes';
+        }
         updateAll();
     });
 

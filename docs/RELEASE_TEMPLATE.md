@@ -1,45 +1,39 @@
-# Breast TNM Tool Release Notes | 更新日志
+# Breast TNM Tool v1.4.0 | 更新日志
 
-This release provides a Windows x64 portable EXE, a standalone desktop HTML file, and a separate mobile-optimized HTML file that can be opened directly in a browser.
+This release updates the **desktop web version** to the latest AJCC8 decision-support interface and refreshes the README plus screenshots.
 
-本版本同时提供 Windows x64 便携版 EXE、桌面版独立 HTML 文件，以及为手机单独优化的手机版 HTML 文件。
+本次版本主要更新 **桌面网页版** 到最新 AJCC8 决策支持界面，并同步刷新 README 与项目截图。
 
 ## Highlights | 本版亮点
 
-- Preserves the full Breast TNM Tool desktop interface
-- Supports anatomic staging and simplified prognostic staging display
-- Includes treatment planning and follow-up recommendation panel
-- Provides downloadable Windows EXE, desktop HTML, and mobile HTML assets directly from the Release page
+- Desktop web upgraded to the new **v1.4.0** interface
+- Added AJCC 8th **anatomic staging** and **clinical/pathologic prognostic staging** workflows
+- Expanded treatment and follow-up decision support using core **NCCN / CSCO / ASCO** principles
+- Added bilingual explanations, module collapsing, print settings, and **Word / Excel export**
+- Refreshed repository screenshots and release documentation
 
-- 完整保留 Breast TNM Tool 桌面应用界面
-- 支持解剖学分期与简化预后分期展示
-- 提供治疗计划与随访建议面板
-- Release 页面直接提供可下载的 Windows EXE、PC HTML 与手机版 HTML 附件
+- 桌面网页版升级为最新 **v1.4.0** 界面
+- 增加 AJCC8 **解剖学分期** 与 **临床/病理预后分期** 工作流
+- 按 **NCCN / CSCO / ASCO** 核心原则扩展治疗与随访决策支持
+- 新增双语解释、模块折叠、打印设置，以及 **Word / Excel 导出**
+- 同步刷新仓库截图和发布文档
 
 ## Download and Usage | 下载与使用
 
-1. Download `Breast-TNM-Tool-*.exe`, `Breast-TNM-Tool-*.html`, or `Breast-TNM-Tool-mobile-*.html` from the assets on this page
-2. Run the EXE on Windows, or open either HTML file directly in a browser
-3. If SmartScreen appears on first launch of the EXE, click "More info" and then "Run anyway"
+1. Download the EXE, desktop HTML, or mobile HTML assets from this release page
+2. Open the desktop HTML directly in a browser, or visit the GitHub Pages desktop web version
+3. Use the mobile HTML when a phone-friendly layout is preferred
 
-1. 下载本页附件中的 `Breast-TNM-Tool-*.exe`、`Breast-TNM-Tool-*.html` 或 `Breast-TNM-Tool-mobile-*.html`
-2. EXE 可在 Windows 中运行，两个 HTML 文件都可直接用浏览器打开
-3. 若首次运行 EXE 出现 SmartScreen 提示，点击“更多信息”后选择“仍要运行”
-
-## Version Notes | 版本说明
-
-- This version is built and published automatically by GitHub Actions
-- The EXE includes Windows metadata such as product name, version, company name, and file description
-- The standalone HTML files preserve both the original PC browser layout and the separate mobile web layout of the tool
-
-- 此版本由 GitHub Actions 自动构建并发布
-- EXE 已写入产品名称、版本号、公司名与文件描述等 Windows 元信息
-- 独立 HTML 文件同时保留了原始 PC 网页形态和单独的手机版网页形态
+1. 下载本页附件中的 EXE、桌面 HTML 或手机版 HTML
+2. 桌面 HTML 可直接用浏览器打开，也可直接访问 GitHub Pages 在线桌面版
+3. 需要手机友好布局时可使用手机版 HTML
 
 ## Notes | 注意事项
 
-- The EXE is currently not code signed
+- The desktop web interface is the primary content update in this release
+- Windows EXE and mobile HTML remain available through the same automated release pipeline
 - Medical content is for informational use only and does not replace diagnosis, pathology review, or formal clinical decision-making
 
-- 当前 EXE 未进行代码签名
+- 本次以桌面网页界面更新为主
+- Windows EXE 与手机版 HTML 仍通过同一套自动发布流程提供
 - 本项目内容仅供医学信息参考，不替代临床诊断、病理判断或正式治疗决策
