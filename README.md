@@ -9,8 +9,6 @@
   <p>
     <a href="https://github.com/liqi3333/breast/releases/latest"><img alt="Latest Release" src="https://img.shields.io/github/v/release/liqi3333/breast?display_name=tag&label=release" /></a>
     <a href="https://github.com/liqi3333/breast/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/liqi3333/breast/total?label=downloads" /></a>
-    <a href="https://github.com/liqi3333/breast/actions/workflows/build-windows.yml"><img alt="Build Windows EXE" src="https://github.com/liqi3333/breast/actions/workflows/build-windows.yml/badge.svg" /></a>
-    <a href="https://github.com/liqi3333/breast/actions/workflows/release.yml"><img alt="Release Windows EXE" src="https://github.com/liqi3333/breast/actions/workflows/release.yml/badge.svg" /></a>
   </p>
 
   <p>
@@ -29,32 +27,38 @@ This repository packages a single-file clinical interface for breast cancer stag
 - desktop standalone HTML / GitHub Pages web app
 - mobile standalone HTML
 
-The latest desktop web update is **v1.4.0**, focused on AJCC 8th edition staging and richer treatment follow-up decision support.
+The latest desktop web update is **v1.4.0**, focused on AJCC 8th edition staging and comprehensive treatment follow-up decision support.
 
-## What's new in the latest desktop web version
+## What's new in v1.4.0
 
-- AJCC 8th **anatomic staging** plus **clinical/pathologic prognostic staging**
-- Scenario-aware inputs for **cTNM / pTNM / ycTNM / ypTNM**
-- Biomarker-driven interpretation for **ER / PR / HER2 / grade / Ki-67 / Luminal subtype**
-- Treatment and follow-up output aligned to core **NCCN / CSCO / ASCO** principles
-- Built-in **bilingual explanations**, collapsible modules, print settings, and **Word / Excel export**
-- Updated screenshots and release documentation
+### Staging & Prognostic Classification
+- **AJCC 8th anatomic staging** (Table 8): T1-4, N0-3, M0-1 combinations with proper handling of T1mi, N1mi, N3 and M0(i+)
+- **Clinical & Pathologic prognostic staging** (Tables 9-10): automatic lookup based on T/N/M group, grade, HER2, ER, PR
+- **Post-neoadjuvant support**: cTNM/pTNM/ycTNM/ypTNM with proper pCR notation (ypT0/is ypN0 does not assign stage group)
+- **HER2 equivocal handling**: automatically treats as negative per AJCC, with alert for formal reassessment
+
+### Biomarkers & Receptor Subtypes
+- Auto-infer Luminal subtype (A/B HER2-, B HER2+, HER2-enriched, TNBC) from ER/PR/HER2/Ki-67/Grade
+- Ki-67 intermediate zone (10-19%) explicitly flagged for MDT discussion
+- HER2-low/ultralow, PD-L1 CPS, genotypic testing (BRCA, PIK3CA, ESR1) for advanced therapy hints
+
+### Treatment & Management
+- **Direct recommendations**: color-coded decision cards (yes/maybe/no) for surgery, chemotherapy, endocrine, targeted, immunotherapy, PARP
+- **Regimen tables**: HR+/HER2-, HER2+, TNBC-specific chemotherapy, CDK4/6, anti-HER2, immunotherapy, post-neoadjuvant escalation/de-escalation options
+- **Drug pools**: organized by category (chemo, endocrine, anti-HER2/ADC, targeted, immunotherapy, bone support)
+- **Early vs. metastatic branching**: M1 triggers IV-stage pathway with stage-specific systemic therapy guidance
+- **Genomic intelligence**: Oncotype DX RS interpretation, MammaPrint risk stratification, PARP/CDK4/6 eligibility assessment
+
+### Multilingual & Export
+- **Bilingual**: Full English/Chinese interface with context-sensitive explanations
+- **Print/Export settings**: checkbox-based module selection for PDF, Word, Excel output
+- **Collapsible UI**: section collapse, help text toggle, settings modal for customization
 
 ## Online HTML Version
 
-- Desktop web: <https://liqi3333.github.io/breast/>
-- Mobile web: <https://liqi3333.github.io/breast/mobile.html>
-- Latest release: <https://github.com/liqi3333/breast/releases/latest>
-
-## Screenshots
-
-### Main interface
-
-![Breast TNM Tool overview](assets/screenshots/overview.png)
-
-### Decision support panel
-
-![Breast TNM Tool treatment plan](assets/screenshots/treatment-plan.png)
+- **Desktop web**: <https://liqi3333.github.io/breast/>
+- **Mobile web**: <https://liqi3333.github.io/breast/mobile.html>
+- **Latest release**: <https://github.com/liqi3333/breast/releases/latest>
 
 ## Quick Start
 
@@ -62,54 +66,47 @@ The latest desktop web update is **v1.4.0**, focused on AJCC 8th edition staging
 
 From the latest release you can download:
 
-- Windows EXE
-- desktop standalone HTML
-- mobile standalone HTML
+- Windows portable EXE (electron-based)
+- Desktop standalone HTML (single-file, no build required)
+- Mobile standalone HTML (responsive, touch-friendly)
 
 ### Run locally
 
 ```bash
+git clone https://github.com/liqi3333/breast.git
+cd breast
 npm install
 npm start
 ```
 
+Opens at `http://localhost:3000`.
+
 ### Build Windows portable EXE
 
 ```bash
-npm install
 npm run build:win
+# Output: dist/Breast-TNM-Tool-1.4.0.exe
 ```
 
-### Build standalone HTML package
+### Build standalone HTML
 
 ```bash
 npm run build:html
-```
-
-Build outputs:
-
-```text
-dist/Breast-TNM-Tool-1.4.0.exe
-dist-html/Breast-TNM-Tool-1.4.0.html
-dist-html/Breast-TNM-Tool-mobile-1.4.0.html
+# Output:
+# dist-html/Breast-TNM-Tool-1.4.0.html
+# dist-html/Breast-TNM-Tool-mobile-1.4.0.html
 ```
 
 ## Release Automation
 
-- Push to `main`: runs build validation and uploads EXE + desktop HTML + mobile HTML workflow artifacts
-- Push a tag like `v1.4.0`: automatically builds the Windows x64 portable EXE, generates standalone HTML assets, creates a GitHub Release, and uploads all files
+- **Push to `main`**: GitHub Actions validates build and uploads workflow artifacts
+- **Push a tag** like `v1.4.0`: automatically builds EXE, generates standalone HTML, creates GitHub Release, uploads all assets
 
 Example:
 
 ```bash
 git tag v1.4.0
 git push origin v1.4.0
-```
-
-## Release Notes Template
-
-```text
-docs/RELEASE_TEMPLATE.md
 ```
 
 ## Project Structure
@@ -125,9 +122,9 @@ docs/RELEASE_TEMPLATE.md
 ├── scripts/
 │   ├── build-html-release.js
 │   └── capture-screenshots.js
-├── index.html
-├── mobile.html
-├── main.js
+├── index.html                  # Desktop web version
+├── mobile.html                 # Mobile web version
+├── main.js                     # Electron entry point (if using desktop app)
 ├── package.json
 ├── README.md
 ├── README.zh-CN.md
@@ -140,4 +137,5 @@ docs/RELEASE_TEMPLATE.md
 
 - `node_modules/`, `dist/`, and `dist-html/` are not committed
 - Windows SmartScreen may appear because the EXE is not code signed
-- Medical content is for informational use only and does not replace formal diagnosis or clinical decision-making
+- **Disclaimer**: Medical content is for informational/educational use only and does not replace formal pathology review, MDT discussion, or clinical decision-making by qualified healthcare professionals
+- All treatment regimens are schematic; actual dosing, scheduling, and drug selection require professional oncology judgment
