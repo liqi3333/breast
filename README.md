@@ -27,32 +27,54 @@ This repository packages a single-file clinical interface for breast cancer stag
 - desktop standalone HTML / GitHub Pages web app
 - mobile standalone HTML
 
-The latest desktop web update is **v1.4.0**, focused on AJCC 8th edition staging and comprehensive treatment follow-up decision support.
+The latest desktop web update is **v1.4.1 (reviewed)**, focused on AJCC 8th edition staging and comprehensive treatment follow-up decision support.
 
-## What's new in v1.4.0
+## What's new in v1.4.1 (reviewed update)
 
-### Staging & Prognostic Classification
-- **AJCC 8th anatomic staging** (Table 8): T1-4, N0-3, M0-1 combinations with proper handling of T1mi, N1mi, N3 and M0(i+)
-- **Clinical & Pathologic prognostic staging** (Tables 9-10): automatic lookup based on T/N/M group, grade, HER2, ER, PR
-- **Post-neoadjuvant support**: cTNM/pTNM/ycTNM/ypTNM with proper pCR notation (ypT0/is ypN0 does not assign stage group)
-- **HER2 equivocal handling**: automatically treats as negative per AJCC, with alert for formal reassessment
+**Review date:** 2026-06-01
 
-### Biomarkers & Receptor Subtypes
-- Auto-infer Luminal subtype (A/B HER2-, B HER2+, HER2-enriched, TNBC) from ER/PR/HER2/Ki-67/Grade
-- Ki-67 intermediate zone (10-19%) explicitly flagged for MDT discussion
-- HER2-low/ultralow, PD-L1 CPS, genotypic testing (BRCA, PIK3CA, ESR1) for advanced therapy hints
+### Clinical Review & Safety
+- Content reviewed against NCCN/CSCO/ASCO 2024-2026 guidelines
+- In-UI audit note with clinical safety disclaimer and review date
+- HER2-low/ultralow correctly framed as treatment-selection markers (not AJCC staging variables)
+- Inconsistency warning when HER2-positive is selected alongside HER2-low/ultralow/0
 
-### Treatment & Management
-- **Direct recommendations**: color-coded decision cards (yes/maybe/no) for surgery, chemotherapy, endocrine, targeted, immunotherapy, PARP
-- **Regimen tables**: HR+/HER2-, HER2+, TNBC-specific chemotherapy, CDK4/6, anti-HER2, immunotherapy, post-neoadjuvant escalation/de-escalation options
-- **Drug pools**: organized by category (chemo, endocrine, anti-HER2/ADC, targeted, immunotherapy, bone support)
-- **Early vs. metastatic branching**: M1 triggers IV-stage pathway with stage-specific systemic therapy guidance
-- **Genomic intelligence**: Oncotype DX RS interpretation, MammaPrint risk stratification, PARP/CDK4/6 eligibility assessment
+### Treatment Updates
+- HR+/HER2-: added ribociclib adjuvant intensification note alongside CDK4/6 inhibitor pathways
+- ESR1 mutation: vepdegestrant and novel ER degraders direction added
+- HER2+: T-DXd expanded indications for select first-line metastatic, neoadjuvant, and residual disease settings with ILD/pneumonitis monitoring
+- HER2-low/ultralow: T-DXd in HR+/HER2-low/ultralow pretreated advanced settings
+- HR+/HER2- pretreated advanced: dato-DXd as new ADC option
+- TNBC: dato-DXd in PD-1/PD-L1-ineligible metastatic TNBC; PD-L1 unknown now prompts testing rather than defaulting to immunotherapy ineligible
 
-### Multilingual & Export
-- **Bilingual**: Full English/Chinese interface with context-sensitive explanations
-- **Print/Export settings**: checkbox-based module selection for PDF, Word, Excel output
-- **Collapsible UI**: section collapse, help text toggle, settings modal for customization
+### Drug Pool Expansions
+- Added **datopotamab deruxtecan (dato-DXd)** to Chinese and English drug pools
+- Added **vepdegestrant** to endocrine/ER pathway drug pool
+- Retained all prior agents: T-DM1, T-DXd, sacituzumab govitecan, CDK4/6, PARP, PI3K/AKT
+
+### Core Features (from v1.4.0)
+
+#### Staging & Prognostic Classification
+- AJCC 8th anatomic staging (Table 8) with proper handling of T1mi, N1mi, N3, M0(i+)
+- Clinical & Pathologic prognostic staging (Tables 9-10) based on T/N/M group, grade, HER2, ER, PR
+- Post-neoadjuvant cTNM/pTNM/ycTNM/ypTNM with pCR notation
+- HER2 equivocal handling per AJCC
+
+#### Biomarkers & Receptor Subtypes
+- Auto-infer Luminal subtype (A/B HER2-, B HER2+, HER2-enriched, TNBC)
+- Ki-67 intermediate zone (10-19%) flagged for MDT discussion
+- HER2-low/ultralow, PD-L1 CPS, BRCA, PIK3CA, ESR1 testing for advanced therapy
+
+#### Treatment & Management
+- Color-coded decision cards (yes/maybe/no) for surgery, chemo, endocrine, targeted, immunotherapy, PARP
+- Regimen tables for HR+/HER2-, HER2+, TNBC, CDK4/6, anti-HER2, immunotherapy
+- Drug pools organized by category with stage-specific systemic therapy guidance
+- Oncotype DX RS interpretation, MammaPrint risk stratification
+
+#### Multilingual & Export
+- Full bilingual English/Chinese interface with context-sensitive explanations
+- Print/Export: checkbox-based module selection for PDF, Word, Excel output
+- Collapsible UI sections, help text toggle, settings modal
 
 ## Online HTML Version
 
@@ -95,7 +117,7 @@ Opens at `http://localhost:3000`.
 
 ```bash
 npm run build:win
-# Output: dist/Breast-TNM-Tool-1.4.0.exe
+# Output: dist/Breast-TNM-Tool-1.4.1.exe
 ```
 
 ### Build standalone HTML
@@ -103,20 +125,20 @@ npm run build:win
 ```bash
 npm run build:html
 # Output:
-# dist-html/Breast-TNM-Tool-1.4.0.html
-# dist-html/Breast-TNM-Tool-mobile-1.4.0.html
+# dist-html/Breast-TNM-Tool-1.4.1.html
+# dist-html/Breast-TNM-Tool-mobile-1.4.1.html
 ```
 
 ## Release Automation
 
 - **Push to `main`**: GitHub Actions validates build and uploads workflow artifacts
-- **Push a tag** like `v1.4.0`: automatically builds EXE, generates standalone HTML, creates GitHub Release, uploads all assets
+- **Push a tag** like `v1.4.1`: automatically builds EXE, generates standalone HTML, creates GitHub Release, uploads all assets
 
 Example:
 
 ```bash
-git tag v1.4.0
-git push origin v1.4.0
+git tag v1.4.1
+git push origin v1.4.1
 ```
 
 ## Project Structure
@@ -128,13 +150,14 @@ git push origin v1.4.0
 │   ├── icon.png
 │   └── screenshots/
 ├── docs/
+│   ├── CHANGELOG.md
 │   └── RELEASE_TEMPLATE.md
 ├── scripts/
 │   ├── build-html-release.js
 │   └── capture-screenshots.js
 ├── index.html                  # Desktop web version
 ├── mobile.html                 # Mobile web version
-├── main.js                     # Electron entry point (if using desktop app)
+├── main.js                     # Electron entry point
 ├── package.json
 ├── README.md
 ├── README.zh-CN.md

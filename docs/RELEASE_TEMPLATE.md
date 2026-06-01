@@ -1,22 +1,30 @@
-# Breast TNM Tool v1.4.0 | 更新日志
+# Breast TNM Tool v1.4.1 (reviewed) | 审查更新
 
-This release updates the **desktop web version** to the latest AJCC8 decision-support interface and refreshes the README plus screenshots.
+**Review date / 审查日期:** 2026-06-01
 
-本次版本主要更新 **桌面网页版** 到最新 AJCC8 决策支持界面，并同步刷新 README 与项目截图。
+This release updates the **desktop web version** to a clinically reviewed v1.4.1 with NCCN/CSCO/ASCO 2024-2026 treatment indication updates, HER2-low/ultralow boundary clarification, and new drug entries (dato-DXd, vepdegestrant).
+
+本次版本为 **桌面网页版** 的临床审查更新 v1.4.1，包含 NCCN/CSCO/ASCO 2024-2026 治疗适应证更新、HER2-low/ultralow 边界澄清，以及新药物条目（dato-DXd, vepdegestrant）。
 
 ## Highlights | 本版亮点
 
-- Desktop web upgraded to the new **v1.4.0** interface
-- Added AJCC 8th **anatomic staging** and **clinical/pathologic prognostic staging** workflows
-- Expanded treatment and follow-up decision support using core **NCCN / CSCO / ASCO** principles
-- Added bilingual explanations, module collapsing, print settings, and **Word / Excel export**
-- Refreshed repository screenshots and release documentation
+### Clinical Review & Safety | 临床审查与安全
+- Content reviewed against NCCN/CSCO/ASCO 2024-2026 guidelines
+- In-UI audit note with clinical safety disclaimer and review date
+- HER2-low/ultralow correctly framed as treatment-selection markers (not AJCC staging variables)
+- Inconsistency warning when HER2-positive is selected alongside HER2-low/ultralow/0
 
-- 桌面网页版升级为最新 **v1.4.0** 界面
-- 增加 AJCC8 **解剖学分期** 与 **临床/病理预后分期** 工作流
-- 按 **NCCN / CSCO / ASCO** 核心原则扩展治疗与随访决策支持
-- 新增双语解释、模块折叠、打印设置，以及 **Word / Excel 导出**
-- 同步刷新仓库截图和发布文档
+### Treatment Indication Updates | 治疗适应证更新
+- HR+/HER2-: ribociclib adjuvant intensification note alongside CDK4/6 inhibitor pathways
+- ESR1 mutation: vepdegestrant and novel ER degraders direction
+- HER2+: T-DXd expanded indications, ILD/pneumonitis monitoring emphasized
+- HER2-low/ultralow: T-DXd in pretreated advanced settings
+- HR+/HER2- pretreated advanced: dato-DXd as new ADC option
+- TNBC: dato-DXd in PD-1/PD-L1-ineligible metastatic TNBC
+
+### Drug Pool | 药物池
+- Added datopotamab deruxtecan (dato-DXd), vepdegestrant
+- All prior agents retained (T-DM1, T-DXd, sacituzumab govitecan, CDK4/6, PARP, PI3K/AKT)
 
 ## Download and Usage | 下载与使用
 

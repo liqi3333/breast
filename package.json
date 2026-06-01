@@ -1,6 +1,6 @@
 {
   "name": "breast-tnm-tool",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "AJCC8 breast cancer staging, prognostic staging, and treatment follow-up decision support for desktop and web | 乳腺癌 AJCC8 分期、预后分期与治疗随访决策支持工具",
   "main": "main.js",
   "author": {
